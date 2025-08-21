@@ -1,0 +1,19 @@
+Checks: >
+  clang-analyzer-*,
+  bugprone-*,
+  modernize-*,
+  performance-*,
+  readability-*,
+  -readability-magic-numbers
+
+WarningsAsErrors: '*'
+
+CheckOptions:
+  - key:             modernize-use-nullptr.NullMacros
+    value:           'NULL'
+  - key:             modernize-loop-convert.MaxCopySize
+    value:           '16'
+  - key:             readability-identifier-naming.VariableCase
+    value:           lower_case
+  - key:             performance-for-range-copy.WarnOnAllAutoCopies
+    value:           'true'
