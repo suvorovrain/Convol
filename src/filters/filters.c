@@ -1,4 +1,55 @@
 #include "filters.h"
+#include "stdio.h"
+#include "stdlib.h"
+
+static convolution_filter *alloc_and_copy_2d(int size, double factor, double bias,
+                                             const double src[][size])
+{
+    convolution_filter *f = malloc(sizeof(*f));
+    if (!f)
+    {
+        fprintf(stderr, "ERROR: malloc failed\n");
+        return NULL;
+    }
+
+    f->matrix = malloc((size_t)size * sizeof(double *));
+    if (!f->matrix)
+    {
+        free(f);
+        fprintf(stderr, "ERROR: malloc failed\n");
+        return NULL;
+    }
+
+    for (int i = 0; i < size; ++i)
+    {
+        f->matrix[i] = malloc((size_t)size * sizeof(double));
+        if (!f->matrix[i])
+        {
+            for (int k = 0; k < i; ++k)
+                free(f->matrix[k]);
+            free(f->matrix);
+            free(f);
+            fprintf(stderr, "ERROR: malloc failed\n");
+            return NULL;
+        }
+        for (int j = 0; j < size; ++j)
+            f->matrix[i][j] = src[i][j];
+    }
+    f->size = size;
+    f->factor = factor;
+    f->bias = bias;
+    return f;
+}
+
+void free_convolution_filter(convolution_filter *f)
+{
+    if (!f)
+        return;
+    for (int i = 0; i < f->size; ++i)
+        free(f->matrix[i]);
+    free(f->matrix);
+    free(f);
+}
 
 //----------------------------------------------------------------------------------------------
 // Blur
@@ -48,41 +99,14 @@ convolution_filter *create_blur_convolution_filter(enum strength str)
     switch (str)
     {
     case SMALL:
-        convolution_filter *filter = malloc(sizeof(convolution_filter));
-        if (!filter)
-        {
-            error("ERROR: malloc failed\n");
-            return NULL;
-        }
-        filter->matrix = small_blur_filter.matrix;
-        filter->bias = small_blur_filter.bias;
-        filter->factor = small_blur_filter.factor;
-        filter->size = SMALL_FILTER_SIZE;
-        return filter;
+        return alloc_and_copy_2d(SMALL_FILTER_SIZE, small_blur_filter.factor,
+                                 small_blur_filter.bias, small_blur_filter.matrix);
     case MEDIUM:
-        convolution_filter *filter = malloc(sizeof(convolution_filter));
-        if (!filter)
-        {
-            error("ERROR: malloc failed\n");
-            return NULL;
-        }
-        filter->matrix = medium_blur_filter.matrix;
-        filter->bias = medium_blur_filter.bias;
-        filter->factor = medium_blur_filter.factor;
-        filter->size = MEDIUM_FILTER_SIZE;
-        return filter;
+        return alloc_and_copy_2d(MEDIUM_FILTER_SIZE, medium_blur_filter.factor,
+                                 medium_blur_filter.bias, medium_blur_filter.matrix);
     case BIG:
-        convolution_filter *filter = malloc(sizeof(convolution_filter));
-        if (!filter)
-        {
-            error("ERROR: malloc failed\n");
-            return NULL;
-        }
-        filter->matrix = big_blur_filter.matrix;
-        filter->bias = big_blur_filter.bias;
-        filter->factor = big_blur_filter.factor;
-        filter->size = BIG_FILTER_SIZE;
-        return filter;
+        return alloc_and_copy_2d(BIG_FILTER_SIZE, big_blur_filter.factor, big_blur_filter.bias,
+                                 big_blur_filter.matrix);
     default:
         error("ERROR: invalid filter size");
         return NULL;
@@ -138,41 +162,14 @@ convolution_filter *create_motion_blur_convolution_filter(enum strength str)
     switch (str)
     {
     case SMALL:
-        convolution_filter *filter = malloc(sizeof(convolution_filter));
-        if (!filter)
-        {
-            error("ERROR: malloc failed\n");
-            return NULL;
-        }
-        filter->matrix = small_motion_blur_filter.matrix;
-        filter->bias = small_motion_blur_filter.bias;
-        filter->factor = small_motion_blur_filter.factor;
-        filter->size = SMALL_FILTER_SIZE;
-        return filter;
+        return alloc_and_copy_2d(SMALL_FILTER_SIZE, small_motion_blur_filter.factor,
+                                 small_motion_blur_filter.bias, small_motion_blur_filter.matrix);
     case MEDIUM:
-        convolution_filter *filter = malloc(sizeof(convolution_filter));
-        if (!filter)
-        {
-            error("ERROR: malloc failed\n");
-            return NULL;
-        }
-        filter->matrix = medium_motion_blur_filter.matrix;
-        filter->bias = medium_motion_blur_filter.bias;
-        filter->factor = medium_motion_blur_filter.factor;
-        filter->size = MEDIUM_FILTER_SIZE;
-        return filter;
+        return alloc_and_copy_2d(MEDIUM_FILTER_SIZE, medium_motion_blur_filter.factor,
+                                 medium_motion_blur_filter.bias, medium_motion_blur_filter.matrix);
     case BIG:
-        convolution_filter *filter = malloc(sizeof(convolution_filter));
-        if (!filter)
-        {
-            error("ERROR: malloc failed\n");
-            return NULL;
-        }
-        filter->matrix = big_motion_blur_filter.matrix;
-        filter->bias = big_motion_blur_filter.bias;
-        filter->factor = big_motion_blur_filter.factor;
-        filter->size = BIG_FILTER_SIZE;
-        return filter;
+        return alloc_and_copy_2d(BIG_FILTER_SIZE, big_motion_blur_filter.factor, big_motion_blur_filter.bias,
+                                 big_motion_blur_filter.matrix);
     default:
         error("ERROR: invalid filter size");
         return NULL;
@@ -228,41 +225,14 @@ convolution_filter *create_find_edges_convolution_filter(enum strength str)
     switch (str)
     {
     case SMALL:
-        convolution_filter *filter = malloc(sizeof(convolution_filter));
-        if (!filter)
-        {
-            error("ERROR: malloc failed\n");
-            return NULL;
-        }
-        filter->matrix = small_find_edges_filter.matrix;
-        filter->bias = small_find_edges_filter.bias;
-        filter->factor = small_find_edges_filter.factor;
-        filter->size = SMALL_FILTER_SIZE;
-        return filter;
+        return alloc_and_copy_2d(SMALL_FILTER_SIZE, small_find_edges_filter.factor,
+                                 small_find_edges_filter.bias, small_find_edges_filter.matrix);
     case MEDIUM:
-        convolution_filter *filter = malloc(sizeof(convolution_filter));
-        if (!filter)
-        {
-            error("ERROR: malloc failed\n");
-            return NULL;
-        }
-        filter->matrix = medium_find_edges_filter.matrix;
-        filter->bias = medium_find_edges_filter.bias;
-        filter->factor = medium_find_edges_filter.factor;
-        filter->size = MEDIUM_FILTER_SIZE;
-        return filter;
+        return alloc_and_copy_2d(MEDIUM_FILTER_SIZE, medium_find_edges_filter.factor,
+                                 medium_find_edges_filter.bias, medium_find_edges_filter.matrix);
     case BIG:
-        convolution_filter *filter = malloc(sizeof(convolution_filter));
-        if (!filter)
-        {
-            error("ERROR: malloc failed\n");
-            return NULL;
-        }
-        filter->matrix = big_find_edges_filter.matrix;
-        filter->bias = big_find_edges_filter.bias;
-        filter->factor = big_find_edges_filter.factor;
-        filter->size = BIG_FILTER_SIZE;
-        return filter;
+        return alloc_and_copy_2d(BIG_FILTER_SIZE, big_find_edges_filter.factor, big_find_edges_filter.bias,
+                                 big_find_edges_filter.matrix);
     default:
         error("ERROR: invalid filter size");
         return NULL;
@@ -318,41 +288,14 @@ convolution_filter *create_emboss_convolution_filter(enum strength str)
     switch (str)
     {
     case SMALL:
-        convolution_filter *filter = malloc(sizeof(convolution_filter));
-        if (!filter)
-        {
-            error("ERROR: malloc failed\n");
-            return NULL;
-        }
-        filter->matrix = small_emboss_filter.matrix;
-        filter->bias = small_emboss_filter.bias;
-        filter->factor = small_emboss_filter.factor;
-        filter->size = SMALL_FILTER_SIZE;
-        return filter;
+        return alloc_and_copy_2d(SMALL_FILTER_SIZE, small_emboss_filter.factor,
+                                 small_emboss_filter.bias, small_emboss_filter.matrix);
     case MEDIUM:
-        convolution_filter *filter = malloc(sizeof(convolution_filter));
-        if (!filter)
-        {
-            error("ERROR: malloc failed\n");
-            return NULL;
-        }
-        filter->matrix = medium_emboss_filter.matrix;
-        filter->bias = medium_emboss_filter.bias;
-        filter->factor = medium_emboss_filter.factor;
-        filter->size = MEDIUM_FILTER_SIZE;
-        return filter;
+        return alloc_and_copy_2d(MEDIUM_FILTER_SIZE, medium_emboss_filter.factor,
+                                 medium_emboss_filter.bias, medium_emboss_filter.matrix);
     case BIG:
-        convolution_filter *filter = malloc(sizeof(convolution_filter));
-        if (!filter)
-        {
-            error("ERROR: malloc failed\n");
-            return NULL;
-        }
-        filter->matrix = big_emboss_filter.matrix;
-        filter->bias = big_emboss_filter.bias;
-        filter->factor = big_emboss_filter.factor;
-        filter->size = BIG_FILTER_SIZE;
-        return filter;
+        return alloc_and_copy_2d(BIG_FILTER_SIZE, big_emboss_filter.factor, big_emboss_filter.bias,
+                                 big_emboss_filter.matrix);
     default:
         error("ERROR: invalid filter size");
         return NULL;
