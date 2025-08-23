@@ -15,7 +15,8 @@ typedef struct
     char *algorithm;
 } input_data;
 
-typedef struct {
+typedef struct
+{
     unsigned char *image;
     int height;
     int width;
@@ -27,47 +28,52 @@ typedef struct {
 // <linear/parallel/split>
 //----------------------------------------------------------------------------------------------
 
-input_data *validate_input(int argc, char **argv) 
+input_data *validate_input(int argc, char **argv)
 {
     if (argc != 6)
     {
         return NULL;
     };
     input_data *input = malloc(sizeof(*input));
-    if (!input) {
+    if (!input)
+    {
         error("ERROR: malloc failed\n");
         return NULL;
     }
 
-    input->src_image=argv[1];
-    input->effect_type=argv[2];
-    input->effect_strength=atoi(argv[3]);
-    input->folder_for_store=argv[4];
-    input->algorithm=argv[5];
+    input->src_image = argv[1];
+    input->effect_type = argv[2];
+    input->effect_strength = atoi(argv[3]);
+    input->folder_for_store = argv[4];
+    input->algorithm = argv[5];
     return input;
 }
 
-save_result(char *dest, image_data *image) {
-    return stbi_write_bmp(dest, image->width,  image->height, image->components, image->image);
+int save_result(char *dest, image_data *image)
+{
+    return stbi_write_bmp(dest, image->width, image->height, image->components, image->image);
 }
 
-image_data *load_image(char *path) {
-    int x,y,n;
-    unsigned char *image = stbi_load(path,&x,&y,&n,0);
-    if (image = NULL){
+image_data *load_image(char *path)
+{
+    int x, y, n;
+    unsigned char *image = stbi_load(path, &x, &y, &n, 0);
+    if (image = NULL)
+    {
         error("ERROR: image read failed");
         return NULL;
     };
     image_data *image_data = malloc(sizeof(*image));
-    if (image==NULL) {
+    if (image == NULL)
+    {
         error("ERROR: malloc failed\n");
         return NULL;
     }
-    image_data->image=image;
-    image_data->height=y;
-    image_data->width=x;
+    image_data->image = image;
+    image_data->height = y;
+    image_data->width = x;
     image_data->components;
-    return image_data
+    return image_data;
 }
 
 enum effect parse_effect(const char *str)
@@ -114,16 +120,17 @@ int main(int argc, char **argv)
     };
     printf("after validate\n");
     printf("Input file: %s\n", input->src_image);
-    printf("Effect type: %s\n",input->effect_type);
+    printf("Effect type: %s\n", input->effect_type);
     printf("Effect strength: %d\n", input->effect_strength);
     printf("Destination folder: %s\n", input->folder_for_store);
     printf("Method: %s\n", input->algorithm);
-    convolution_filter *filter = set_filter(parse_effect(input->effect_type), input->effect_strength);
+    convolution_filter *filter =
+        set_filter(parse_effect(input->effect_type), input->effect_strength);
 
     // load file
 
     // choose algorithm
-    
+
     // save file
 
     return 0;
