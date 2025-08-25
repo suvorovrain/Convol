@@ -10,6 +10,6 @@ typedef struct
 } image_data;
 
 image_data *load_image(char *path);
-int save_image(char *dest, image_data *image);
+int save_image(const char *dest, image_data *image);
 
 #endif // IO_H
