@@ -1,6 +1,9 @@
 #include "filters.h"
 #include "stdio.h"
 #include "stdlib.h"
+#include <stdio.h>
+
+#define error(...)(fprintf(stderr, __VA_ARGS__))
 
 static convolution_filter *alloc_and_copy_2d(int size, double factor, double bias,
                                              const double src[][size])
@@ -51,7 +54,7 @@ void free_convolution_filter(convolution_filter *filter)
     free(filter);
 }
 
-convolution_filter *set_filter(enum effect eff, int strength)
+convolution_filter *set_filter(enum effect eff, enum strength strength)
 {
     printf("set_filter\n");
     switch (eff)

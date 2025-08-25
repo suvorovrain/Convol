@@ -1,10 +1,18 @@
-
+#define STB_IMAGE_IMPLEMENTATION
+#include "../../vendor/stb_image.h"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "../../vendor/stb_image_write.h"
 #include "io.h"
-#include "stdlib.h"
-int save_result(char *dest, image_data *image)
+#include <stdlib.h>
+#include <stdio.h>
+
+
+#define error(...)(fprintf(stderr, __VA_ARGS__))
+
+int save_image(char *dest, image_data *image)
 {
     int res = stbi_write_bmp(dest, image->width, image->height, image->components, image->image);
-    if (res = 0) {
+    if (res == 0) {
         error("ERROR: image save failed");
         return 1;
     };
@@ -15,13 +23,13 @@ image_data *load_image(char *path)
 {
     int x, y, n;
     unsigned char *image = stbi_load(path, &x, &y, &n, 0);
-    if (image = NULL)
+    if (!image)
     {
         error("ERROR: image read failed");
         return NULL;
     };
-    image_data *image_data = malloc(sizeof(*image));
-    if (image == NULL)
+    image_data *image_data = malloc(sizeof(*image_data));
+    if (!image)
     {
         error("ERROR: malloc failed\n");
         return NULL;
@@ -29,6 +37,6 @@ image_data *load_image(char *path)
     image_data->image = image;
     image_data->height = y;
     image_data->width = x;
-    image_data->components;
+    image_data->components = n;
     return image_data;
 }

@@ -1,3 +1,6 @@
+#ifndef IO_H
+#define IO_H
+
 typedef struct
 {
     unsigned char *image;
@@ -8,3 +11,5 @@ typedef struct
 
 image_data *load_image(char *path);
 int save_image(char *dest, image_data *image);
+
+#endif // IO_H

@@ -1,15 +1,19 @@
+#include "../algo/include/algo.h"
+
+#ifndef PARCE_H
+#define PARCE_H
+
 typedef struct
 {
     char *src_image;
-    char *effect_type;
-    int effect_strength;
+    enum effect effect_type;
+    enum strength effect_strength;
     char *folder_for_store;
-    char *algorithm;
+    enum algorithm_type algorithm;
 } input_data;
 
 input_data *validate_input(int argc, char **argv);
+#endif // PARCE_H
 
-enum effect parse_effect(const char *str);
-enum algorithm_type parse_algorithm_type(const char *str);
 
 

@@ -1,4 +1,8 @@
-#include "utils/io.h"
+#include "../../utils/io.h"
+#include "../../filters/filters.h"
+
+#ifndef ALGO_H
+#define ALGO_H
 enum algorithm_type
 {
     LINEAR = 1,
@@ -9,3 +13,5 @@ enum algorithm_type
 };
 
 image_data *convolution(image_data *image, convolution_filter *filter, int type);
+
+#endif // ALGO_H
