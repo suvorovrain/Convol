@@ -56,7 +56,6 @@ void free_convolution_filter(convolution_filter *filter)
 
 convolution_filter *set_filter(enum effect eff, enum strength strength)
 {
-    printf("set_filter\n");
     switch (eff)
     {
     case BLUR:
