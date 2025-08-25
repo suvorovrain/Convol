@@ -14,6 +14,3 @@ typedef struct
 
 input_data *validate_input(int argc, char **argv);
 #endif // PARCE_H
-
-
-
