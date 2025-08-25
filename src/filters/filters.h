@@ -26,7 +26,7 @@ typedef struct {
     double bias;
 } small_convolution_filter;
 
-// extern small_convolution_filter small_blur_filter;
+extern small_convolution_filter small_blur_filter;
 
 #define MEDIUM_FILTER_SIZE 7
 typedef struct {
@@ -35,7 +35,7 @@ typedef struct {
     double bias;
 } medium_convolution_filter;
 
-// extern medium_convolution_filter medium_blur_filter;
+extern medium_convolution_filter medium_blur_filter;
 
 #define BIG_FILTER_SIZE 9
 typedef struct {
@@ -44,7 +44,7 @@ typedef struct {
     double bias;
 } big_convolution_filter;
 
-// extern big_convolution_filter big_blur_filter;
+extern big_convolution_filter big_blur_filter;
 
 typedef struct {
     double **matrix;
@@ -54,6 +54,7 @@ typedef struct {
 } convolution_filter;
 
 void free_convolution_filter(convolution_filter *f);
+convolution_filter *set_filter(enum effect eff, int strength);
 
 convolution_filter *create_blur_convolution_filter(enum strength str);
 convolution_filter *create_motion_blur_convolution_filter(enum strength str);

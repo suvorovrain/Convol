@@ -41,14 +41,33 @@ static convolution_filter *alloc_and_copy_2d(int size, double factor, double bia
     return f;
 }
 
-void free_convolution_filter(convolution_filter *f)
+void free_convolution_filter(convolution_filter *filter)
 {
-    if (!f)
+    if (!filter)
         return;
-    for (int i = 0; i < f->size; ++i)
-        free(f->matrix[i]);
-    free(f->matrix);
-    free(f);
+    for (int i = 0; i < filter->size; ++i)
+        free(filter->matrix[i]);
+    free(filter->matrix);
+    free(filter);
+}
+
+convolution_filter *set_filter(enum effect eff, int strength)
+{
+    printf("set_filter\n");
+    switch (eff)
+    {
+    case BLUR:
+        return create_blur_convolution_filter(strength);
+    case MOTION_BLUR:
+        return create_motion_blur_convolution_filter(strength);
+    case FIND_EDGES:
+        return create_find_edges_convolution_filter(strength);
+    case EMBOSS:
+        return create_emboss_convolution_filter(strength);
+    default:
+        error("ERROR: invalid filter name");
+        return NULL;
+    }
 }
 
 //----------------------------------------------------------------------------------------------
