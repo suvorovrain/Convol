@@ -6,7 +6,7 @@
 
 
 //----------------------------------------------------------------------------------------------
-// Usage: ./convol <src_image> <blur/motion_blur/find_edges/sharpen> <1/2/3> <dest>
+// Usage: ./convol <src_image> <blur/motion_blur/find_edges/emboss> <1/2/3> <dest>
 // <linear/parallel_pixel/parallel_row/parallel_column/split>
 //----------------------------------------------------------------------------------------------
 
@@ -19,12 +19,7 @@ int main(int argc, char **argv)
     {
         return -1;
     };
-    printf("after validate\n");
-    printf("Input file: %s\n", input->src_image);
-    printf("Effect type: %d\n", input->effect_type);
-    printf("Effect strength: %d\n", input->effect_strength);
-    printf("Destination folder: %s\n", input->folder_for_store);
-    printf("Method: %d\n", input->algorithm);
+
     convolution_filter *filter =
         set_filter(input->effect_type, input->effect_strength);
     if (!filter)

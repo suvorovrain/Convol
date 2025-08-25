@@ -2,15 +2,18 @@
 #include "../algo/include/algo.h"
 #include "../filters/filters.h"
 #include "parce.h"
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-#define error(...)(fprintf(stderr, __VA_ARGS__))
+#define USAGE_MSG                                                                                  \
+    "Usage: ./convol <src_image> <blur/motion_blur/find_edges/emboss> <1/2/3> <dest> "             \
+    "<linear/parallel_pixel/parallel_row/parallel_column/split>\n"
+
+#define error(...) (fprintf(stderr, __VA_ARGS__))
 
 enum effect parse_effect(const char *str)
 {
-    printf("parse_effect\n");
     if (strcmp(str, "blur") == 0)
         return BLUR;
     if (strcmp(str, "motion_blur") == 0)
@@ -24,7 +27,6 @@ enum effect parse_effect(const char *str)
 
 enum algorithm_type parse_algorithm_type(const char *str)
 {
-    printf("parse_algo\n");
     if (strcmp(str, "linear") == 0)
         return LINEAR;
     if (strcmp(str, "parallel_pixel") == 0)
@@ -40,7 +42,6 @@ enum algorithm_type parse_algorithm_type(const char *str)
 
 enum strength parse_effect_strength(const char *str)
 {
-    printf("parse_strength\n");
     if (strcmp(str, "1") == 0)
         return SMALL;
     if (strcmp(str, "2") == 0)
@@ -54,8 +55,7 @@ input_data *validate_input(int argc, char **argv)
 {
     if (argc != 6)
     {
-        error("Usage: ./convol <src_image> <blur/motion_blur/find_edges/sharpen/emboss> "
-              "<1/2/3> <dest> <linear/parallel_pixel/parallel_row/parallel_column/split>\n");
+        error(USAGE_MSG);
         return NULL;
     };
     input_data *input = malloc(sizeof(*input));
@@ -67,22 +67,19 @@ input_data *validate_input(int argc, char **argv)
     int effect = parse_effect(argv[2]);
     if (effect == -1)
     {
-        error("Usage: ./convol <src_image> <blur/motion_blur/find_edges/sharpen/emboss> "
-              "<1/2/3> <dest> <linear/parallel_pixel/parallel_row/parallel_column/split>\n");
+        error(USAGE_MSG);
         return NULL;
     };
     int strength = parse_effect_strength(argv[3]);
     if (strength == -1)
     {
-        error("Usage: ./convol <src_image> <blur/motion_blur/find_edges/sharpen/emboss> "
-              "<1/2/3> <dest> <linear/parallel_pixel/parallel_row/parallel_column/split>\n");
+        error(USAGE_MSG);
         return NULL;
     };
     int algorithm = parse_algorithm_type(argv[5]);
     if (algorithm == -1)
     {
-        error("Usage: ./convol <src_image> <blur/motion_blur/find_edges/sharpen/emboss> "
-              "<1/2/3> <dest> <linear/parallel_pixel/parallel_row/parallel_column/split>\n");
+        error(USAGE_MSG);
         return NULL;
     };
     input->src_image = argv[1];
