@@ -22,7 +22,7 @@ image_data *convolution(image_data *image, convolution_filter *filter, int type)
         error("TODO: implement parallel_column algorithm\n");
         return NULL;
     case SPLIT:
-        error("TODO: implement parallel_split algorithm\n");
+        error("TODO: implement split algorithm\n");
         return NULL;
     default:
         error("ERROR: unsupported algorithm type\n");

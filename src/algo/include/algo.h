@@ -3,6 +3,12 @@
 
 #ifndef ALGO_H
 #define ALGO_H
+
+#define MIN(a,b) ((a) < (b) ? (a) : (b))
+#define MAX(a,b) ((a) > (b) ? (a) : (b))
+#define RED 0
+#define GREEN 1
+#define BLUE 2
 enum algorithm_type
 {
     LINEAR = 1,
