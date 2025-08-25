@@ -3,7 +3,7 @@
 
 #ifndef ALGO_H
 #define ALGO_H
-
+#define error(...) (fprintf(stderr, __VA_ARGS__))
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 #define MAX(a,b) ((a) > (b) ? (a) : (b))
 #define RED 0
@@ -17,6 +17,7 @@ enum algorithm_type
     PARALLEL_COLUMN = 4,
     SPLIT = 5,
 };
+image_data *create_canvas(image_data *image);
 
 image_data *convolution(image_data *image, convolution_filter *filter, int type);
 
