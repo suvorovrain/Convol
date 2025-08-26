@@ -1,5 +1,8 @@
+#include <stdio.h>
 #ifndef IO_H
 #define IO_H
+
+#define error(...) (fprintf(stderr, __VA_ARGS__))
 
 typedef struct
 {

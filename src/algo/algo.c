@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define error(...) (fprintf(stderr, __VA_ARGS__))
 
 image_data *convolution(image_data *image, convolution_filter *filter, int type)
 {

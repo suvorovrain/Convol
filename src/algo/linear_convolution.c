@@ -26,33 +26,46 @@ image_data *linear_convolution(image_data *image, convolution_filter *filter)
     double bias = filter->bias;
 
     for (int x = 0; x < width; x++)
+    {
         for (int y = 0; y < height; y++)
         {
             double red = 0.0, green = 0.0, blue = 0.0;
             for (int fy = 0; fy < filter_size; fy++)
+            {
                 for (int fx = 0; fx < filter_size; fx++)
                 {
                     int ix = x - filter_size / 2 + fx;
                     int iy = y - filter_size / 2 + fy;
                     if (ix < 0)
+                    {
                         ix = 0;
+                    };
                     if (iy < 0)
+                    {
                         iy = 0;
+                    };
                     if (ix >= width)
+                    {
                         ix = width - 1;
+                    };
                     if (iy >= height)
+                    {
                         iy = height - 1;
-
+                    };
                     int idx = (iy * width + ix) * components;
                     red += image_src[idx + RED] * filter_mat[fy][fx];
                     green += image_src[idx + GREEN] * filter_mat[fy][fx];
                     blue += image_src[idx + BLUE] * filter_mat[fy][fx];
                 }
-            int idx = (y * width + x) * components;
+                int idx = (y * width + x) * components;
 
-            result_image[idx + 0] = (unsigned char)MIN(MAX((int)(factor * red + bias), 0), 255);
-            result_image[idx + 1] = (unsigned char)MIN(MAX((int)(factor * green + bias), 0), 255);
-            result_image[idx + 2] = (unsigned char)MIN(MAX((int)(factor * blue + bias), 0), 255);
+                result_image[idx + 0] = (unsigned char)MIN(MAX((int)(factor * red + bias), 0), 255);
+                result_image[idx + 1] =
+                    (unsigned char)MIN(MAX((int)(factor * green + bias), 0), 255);
+                result_image[idx + 2] =
+                    (unsigned char)MIN(MAX((int)(factor * blue + bias), 0), 255);
+            }
         }
+    }
     return new_image;
 }

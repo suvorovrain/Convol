@@ -1,5 +1,9 @@
+#include <stdio.h>
+
 #ifndef FILTERS_H
 #define FILTERS_H
+
+#define error(...) (fprintf(stderr, __VA_ARGS__))
 
 enum effect {
     BLUR = 1,

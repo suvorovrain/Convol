@@ -10,8 +10,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#define error(...) (fprintf(stderr, __VA_ARGS__))
-
 int save_image(const char *dest, image_data *image)
 {
     char path[1024];

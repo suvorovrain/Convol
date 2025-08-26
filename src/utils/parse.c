@@ -10,44 +10,78 @@
     "Usage: ./convol <src_image> <blur/motion_blur/find_edges/emboss> <1/2/3> <dest> "             \
     "<linear/parallel_pixel/parallel_row/parallel_column/split>\n"
 
-#define error(...) (fprintf(stderr, __VA_ARGS__))
-
 enum effect parse_effect(const char *str)
 {
     if (strcmp(str, "blur") == 0)
+    {
         return BLUR;
+    }
+
     if (strcmp(str, "motion_blur") == 0)
+    {
         return MOTION_BLUR;
+    }
+
     if (strcmp(str, "find_edges") == 0)
+    {
         return FIND_EDGES;
+    }
+
     if (strcmp(str, "emboss") == 0)
+    {
         return EMBOSS;
+    }
+
     return -1;
 }
 
 enum algorithm_type parse_algorithm_type(const char *str)
 {
     if (strcmp(str, "linear") == 0)
+    {
         return LINEAR;
+    }
+
     if (strcmp(str, "parallel_pixel") == 0)
+    {
         return PARALLEL_PIXEL;
+    }
+
     if (strcmp(str, "parallel_row") == 0)
+    {
         return PARALLEL_PIXEL;
+    }
+
     if (strcmp(str, "parallel_column") == 0)
+    {
         return PARALLEL_PIXEL;
+    }
+
     if (strcmp(str, "split") == 0)
+    {
         return SPLIT;
+    }
+
     return -1;
 }
 
 enum strength parse_effect_strength(const char *str)
 {
     if (strcmp(str, "1") == 0)
+    {
         return SMALL;
+    }
+
     if (strcmp(str, "2") == 0)
+    {
         return MEDIUM;
+    }
+
     if (strcmp(str, "3") == 0)
+    {
         return BIG;
+    }
+
     return -1;
 }
 

@@ -1,5 +1,6 @@
 #include "../../utils/io.h"
 #include "../../filters/filters.h"
+#include <stdio.h>
 
 #ifndef ALGO_H
 #define ALGO_H

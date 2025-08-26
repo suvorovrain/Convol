@@ -25,3 +25,4 @@ format-check:
 
 lint:
 	clang-tidy $(SRC) -- $(CFLAGS)
+	

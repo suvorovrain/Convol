@@ -1,9 +1,6 @@
 #include "filters.h"
-#include "stdio.h"
-#include "stdlib.h"
 #include <stdio.h>
-
-#define error(...) (fprintf(stderr, __VA_ARGS__))
+#include <stdlib.h>
 
 static convolution_filter *alloc_and_copy_2d(int size, double factor, double bias,
                                              const double src[][size])
@@ -29,14 +26,18 @@ static convolution_filter *alloc_and_copy_2d(int size, double factor, double bia
         if (!f->matrix[i])
         {
             for (int k = 0; k < i; ++k)
+            {
                 free(f->matrix[k]);
+            }
             free(f->matrix);
             free(f);
             fprintf(stderr, "ERROR: malloc failed\n");
             return NULL;
         }
         for (int j = 0; j < size; ++j)
+        {
             f->matrix[i][j] = src[i][j];
+        }
     }
     f->size = size;
     f->factor = factor;
@@ -47,9 +48,15 @@ static convolution_filter *alloc_and_copy_2d(int size, double factor, double bia
 void free_convolution_filter(convolution_filter *filter)
 {
     if (!filter)
+    {
         return;
+    }
+
     for (int i = 0; i < filter->size; ++i)
+    {
         free(filter->matrix[i]);
+    }
+
     free(filter->matrix);
     free(filter);
 }

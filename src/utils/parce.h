@@ -1,7 +1,10 @@
 #include "../algo/include/algo.h"
+#include <stdio.h>
 
 #ifndef PARCE_H
 #define PARCE_H
+
+#define error(...) (fprintf(stderr, __VA_ARGS__))
 
 typedef struct
 {
