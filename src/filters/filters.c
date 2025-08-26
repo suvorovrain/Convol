@@ -3,7 +3,7 @@
 #include "stdlib.h"
 #include <stdio.h>
 
-#define error(...)(fprintf(stderr, __VA_ARGS__))
+#define error(...) (fprintf(stderr, __VA_ARGS__))
 
 static convolution_filter *alloc_and_copy_2d(int size, double factor, double bias,
                                              const double src[][size])
@@ -189,8 +189,8 @@ convolution_filter *create_motion_blur_convolution_filter(enum strength str)
         return alloc_and_copy_2d(MEDIUM_FILTER_SIZE, medium_motion_blur_filter.factor,
                                  medium_motion_blur_filter.bias, medium_motion_blur_filter.matrix);
     case BIG:
-        return alloc_and_copy_2d(BIG_FILTER_SIZE, big_motion_blur_filter.factor, big_motion_blur_filter.bias,
-                                 big_motion_blur_filter.matrix);
+        return alloc_and_copy_2d(BIG_FILTER_SIZE, big_motion_blur_filter.factor,
+                                 big_motion_blur_filter.bias, big_motion_blur_filter.matrix);
     default:
         error("ERROR: invalid filter size");
         return NULL;
@@ -252,8 +252,8 @@ convolution_filter *create_find_edges_convolution_filter(enum strength str)
         return alloc_and_copy_2d(MEDIUM_FILTER_SIZE, medium_find_edges_filter.factor,
                                  medium_find_edges_filter.bias, medium_find_edges_filter.matrix);
     case BIG:
-        return alloc_and_copy_2d(BIG_FILTER_SIZE, big_find_edges_filter.factor, big_find_edges_filter.bias,
-                                 big_find_edges_filter.matrix);
+        return alloc_and_copy_2d(BIG_FILTER_SIZE, big_find_edges_filter.factor,
+                                 big_find_edges_filter.bias, big_find_edges_filter.matrix);
     default:
         error("ERROR: invalid filter size");
         return NULL;

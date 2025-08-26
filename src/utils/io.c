@@ -3,15 +3,14 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../../vendor/stb_image_write.h"
 #include "io.h"
-#include <stdlib.h>
+#include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <string.h>
-#include <errno.h>
 
-
-#define error(...)(fprintf(stderr, __VA_ARGS__))
+#define error(...) (fprintf(stderr, __VA_ARGS__))
 
 int save_image(const char *dest, image_data *image)
 {
@@ -19,10 +18,13 @@ int save_image(const char *dest, image_data *image)
     snprintf(path, sizeof(path), "%s", dest);
 
     char *slash = strrchr(path, '/');
-    if (slash) {
+    if (slash)
+    {
         *slash = '\0';
-        if (mkdir(path,0777) != 0) {
-              if (errno != EEXIST) {
+        if (mkdir(path, 0777) != 0)
+        {
+            if (errno != EEXIST)
+            {
                 error("ERROR: cannot create directory\n");
                 return 1;
             }
@@ -30,15 +32,14 @@ int save_image(const char *dest, image_data *image)
         *slash = '/';
     }
 
-    int res = stbi_write_bmp(dest, image->width, image->height,
-                             image->components, image->image);
-    if (res == 0) {
+    int res = stbi_write_bmp(dest, image->width, image->height, image->components, image->image);
+    if (res == 0)
+    {
         error("ERROR: image save failed\n");
         return 1;
     }
     return 0;
 }
-
 
 image_data *load_image(char *path)
 {

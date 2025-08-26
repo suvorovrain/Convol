@@ -27,8 +27,8 @@ image_data *parallel_pixel_convolution(image_data *image, convolution_filter *fi
     double bias = filter->bias;
     double red = 0.0, green = 0.0, blue = 0.0;
     int x, y, fx, fy, ix, iy, idx;
-#pragma omp parallel for collapse(2) schedule(static)                                              \
-    private(x, y, fx, fy, ix, iy, idx, red, green, blue)
+#pragma omp parallel for collapse(2)                                                               \
+    schedule(static) private(x, y, fx, fy, ix, iy, idx, red, green, blue)
     for (x = 0; x < width; x++)
         for (y = 0; y < height; y++)
         {

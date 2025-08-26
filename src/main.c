@@ -1,15 +1,13 @@
 #include "filters/filters.h"
 #include "utils/io.h"
 #include "utils/parce.h"
-#include <stdlib.h>
 #include <stdio.h>
-
+#include <stdlib.h>
 
 //----------------------------------------------------------------------------------------------
 // Usage: ./convol <src_image> <blur/motion_blur/find_edges/emboss> <1/2/3> <dest>
 // <linear/parallel_pixel/parallel_row/parallel_column/split>
 //----------------------------------------------------------------------------------------------
-
 
 int main(int argc, char **argv)
 {
@@ -20,8 +18,7 @@ int main(int argc, char **argv)
         return -1;
     };
 
-    convolution_filter *filter =
-        set_filter(input->effect_type, input->effect_strength);
+    convolution_filter *filter = set_filter(input->effect_type, input->effect_strength);
     if (!filter)
     {
         return -1;
@@ -35,7 +32,7 @@ int main(int argc, char **argv)
     };
 
     // convolution
-    image_data *result_image = convolution(src_image, filter,input->algorithm);
+    image_data *result_image = convolution(src_image, filter, input->algorithm);
     if (!result_image)
     {
         return -1;
