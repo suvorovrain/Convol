@@ -24,7 +24,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y clang-tools
 
       - name: Run clang-tidy
-        run: clang-tidy *.c -- -Wall -Wextra -Wpedantic
+        run: make lint
 
   format:
     runs-on: ubuntu-latest
@@ -35,4 +35,4 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y clang-format
 
       - name: Check formatting
-        run: clang-format --dry-run --Werror *.c *.h
+        run: make format-check
