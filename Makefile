@@ -3,6 +3,7 @@ CFLAGS  := -Wall -Wextra -O2 -Wpedantic
 LDFLAGS := -lm -fopenmp
 
 SRC := $(shell find src -name '*.c') $(wildcard *.c)
+HDR := $(shell find src -name '*.c') $(wildcard *.h)
 TARGET  := build/convol
 
 .PHONY: build clean run
@@ -17,10 +18,10 @@ clean:
 	rm -rf build
 
 format:
-	clang-format -i $(SRC) *.h
+	clang-format -i $(SRC) $(HDR)
 
 format-check:
-	clang-format --dry-run --Werror $(SRC) *.h
+	clang-format --dry-run --Werror $(SRC) $(HDR)
 
 lint:
 	clang-tidy $(SRC) -- $(CFLAGS)
