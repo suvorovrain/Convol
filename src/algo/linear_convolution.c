@@ -1,9 +1,8 @@
 #include "../filters/filters.h"
 #include "../utils/io.h"
-#include <stdio.h>
 #include "include/algo.h"
+#include <stdio.h>
 #include <stdlib.h>
-
 
 image_data *linear_convolution(image_data *image, convolution_filter *filter)
 {
@@ -33,8 +32,17 @@ image_data *linear_convolution(image_data *image, convolution_filter *filter)
             for (int fy = 0; fy < filter_size; fy++)
                 for (int fx = 0; fx < filter_size; fx++)
                 {
-                    int ix = (x - filter_size / 2 + fx + width) % width;
-                    int iy = (y - filter_size / 2 + fy + height) % height;
+                    int ix = x - filter_size / 2 + fx;
+                    int iy = y - filter_size / 2 + fy;
+                    if (ix < 0)
+                        ix = 0;
+                    if (iy < 0)
+                        iy = 0;
+                    if (ix >= width)
+                        ix = width - 1;
+                    if (iy >= height)
+                        iy = height - 1;
+
                     int idx = (iy * width + ix) * components;
                     red += image_src[idx + RED] * filter_mat[fy][fx];
                     green += image_src[idx + GREEN] * filter_mat[fy][fx];
