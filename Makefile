@@ -2,7 +2,7 @@ CC      := gcc
 CFLAGS  := -Wall -Wextra -O2 -Wpedantic
 LDFLAGS := -lm -fopenmp
 
-SRC     := src/main.c src/utils/io.c src/utils/parse.c src/algo/algo.c src/algo/linear_convolution.c src/algo/parallel_convolution.c src/filters/filters.c
+SRC     := $(wildcard *.c)
 TARGET  := build/convol
 
 .PHONY: build clean run
@@ -15,3 +15,15 @@ $(TARGET): $(SRC)
 
 clean:
 	rm -rf build
+
+clean:
+	rm -rf build
+
+format:
+	clang-format -i $(SRC) *.h
+
+format-check:
+	clang-format --dry-run --Werror $(SRC) *.h
+
+lint:
+	clang-tidy $(SRC) -- $(CFLAGS)
