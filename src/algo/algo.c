@@ -1,6 +1,6 @@
 #include "include/algo.h"
 #include "../filters/filters.h"
-#include "../utils/io.h"
+#include "../utils/include/io.h"
 #include "include/linear_convolution.h"
 #include "include/parallel_convolution.h"
 #include <stdio.h>
@@ -19,7 +19,7 @@ image_data *convolution(image_data *image, convolution_filter *filter, int type)
         return parallel_row_convolution(image, filter);
     case PARALLEL_COLUMN:
         return parallel_column_convolution(image, filter);
-    case SPLIT:
+    case STREAM:
         error("TODO: implement split algorithm\n");
         return NULL;
     default:

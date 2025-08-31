@@ -1,4 +1,4 @@
-#include "../algo/include/algo.h"
+#include "../../algo/include/algo.h"
 #include <stdio.h>
 
 #ifndef PARCE_H

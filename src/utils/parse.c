@@ -1,14 +1,14 @@
 
 #include "../algo/include/algo.h"
 #include "../filters/filters.h"
-#include "parce.h"
+#include "include/parce.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define USAGE_MSG                                                                                  \
     "Usage: ./convol <src_image> <blur/motion_blur/find_edges/emboss> <1/2/3> <dest> "             \
-    "<linear/parallel_pixel/parallel_row/parallel_column/split>\n"
+    "<linear/parallel_pixel/parallel_row/parallel_column/stream>\n"
 
 enum effect parse_effect(const char *str)
 {
@@ -57,9 +57,9 @@ enum algorithm_type parse_algorithm_type(const char *str)
         return PARALLEL_PIXEL;
     }
 
-    if (strcmp(str, "split") == 0)
+    if (strcmp(str, "stream") == 0)
     {
-        return SPLIT;
+        return STREAM;
     }
 
     return -1;

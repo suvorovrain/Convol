@@ -1,4 +1,4 @@
-#include "../../utils/io.h"
+#include "../../utils/include/io.h"
 #include "../../filters/filters.h"
 #include <stdio.h>
 
@@ -16,7 +16,7 @@ enum algorithm_type
     PARALLEL_PIXEL = 2,
     PARALLEL_ROW = 3,
     PARALLEL_COLUMN = 4,
-    SPLIT = 5,
+    STREAM = 5,
 };
 image_data *create_canvas(image_data *image);
 

@@ -2,7 +2,8 @@
 #include "../../vendor/stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../../vendor/stb_image_write.h"
-#include "io.h"
+#include "include/io.h"
+#include <dirent.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -60,4 +61,91 @@ image_data *load_image(char *path)
     image_data->width = x;
     image_data->components = n;
     return image_data;
+}
+
+#include <dirent.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <string.h>
+
+int list_dir_entries(const char *dirpath, char ***out, size_t *count)
+{
+    if (!dirpath || !out || !count)
+    {
+        return 1;
+    }
+
+    *out = NULL;
+    *count = 0;
+
+    DIR *src_dir = opendir(dirpath);
+    if (!src_dir)
+    {
+        return 1;
+    }
+
+    size_t dl = strlen(dirpath);
+    int need_slash = (dl > 0 && dirpath[dl - 1] != '/');
+
+    char **arr = NULL;
+    size_t n = 0, cap = 0;
+
+    struct dirent *de;
+    while ((de = readdir(src_dir)) != NULL)
+    {
+        const char *name = de->d_name;
+        if ((name[0] == '.' && name[1] == '\0') ||
+            (name[0] == '.' && name[1] == '.' && name[2] == '\0'))
+        {
+            continue;
+        }
+
+        size_t nl = strlen(name);
+        size_t plen = dl + need_slash + nl + 1;
+
+        char *path = (char *)malloc(plen);
+        if (!path)
+        {
+            closedir(src_dir);
+            for (size_t i = 0; i < n; ++i)
+            {
+                free(arr[i]);
+            }
+            free(arr);
+            return 1;
+        }
+
+        memcpy(path, dirpath, dl);
+        if (need_slash)
+        {
+            path[dl] = '/';
+        }
+        memcpy(path + dl + need_slash, name, nl + 1);
+
+        if (n == cap)
+        {
+            size_t newcap = cap ? cap * 2 : 32;
+            char **tmp = (char **)realloc(arr, newcap * sizeof(char *));
+            if (!tmp)
+            {
+                free(path);
+                closedir(src_dir);
+                for (size_t i = 0; i < n; ++i)
+                {
+                    free(arr[i]);
+                }
+                free(arr);
+                return 1;
+            }
+            arr = tmp;
+            cap = newcap;
+        }
+
+        arr[n++] = path;
+    }
+
+    closedir(src_dir);
+    *out = arr;
+    *count = n;
+    return 0;
 }
