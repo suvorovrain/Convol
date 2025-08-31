@@ -12,7 +12,7 @@ typedef struct reader_parameters
     char **files_list;
     size_t files_number;
     atomic_size_t *next_file_id;
-    atomic_int *next_id;
+    atomic_int *next_task_id;
 } rd_pararms;
 
 typedef struct producer_parameters

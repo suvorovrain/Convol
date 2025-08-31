@@ -144,3 +144,13 @@ void bq_destroy(b_queue *queue) {
     pthread_mutex_destroy(&(queue->enq_lock));
     free(queue);
 }
+
+in_task *create_in_task(int id, image_data *image){
+    in_task *task = malloc(sizeof(*task));
+    if (!task){
+        return NULL;
+    }
+    task->id=id;
+    task->src_image=image;
+    return task;
+}
