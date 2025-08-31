@@ -32,11 +32,13 @@ typedef struct
 {
     int id;
     image_data *src_image;
+    char *image_name;
 } in_task;
 typedef struct
 {
     int id;
     image_data *result_image;
+    char *image_name;
 } out_task;
 
 #endif // QUEUE_H

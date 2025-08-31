@@ -1,10 +1,12 @@
 #include "include/subjects.h"
 #include <stdbool.h>
 #include <stdlib.h>
+#include "../algo/include/linear_convolution.h"
+
 void *read(void *param)
 {
     // init params
-    rd_pararms *rd_params = (rd_pararms *)param;
+    rd_params_t *rd_params = (rd_params_t *)param;
     b_queue *queue_in = rd_params->queue_in;
     char **files_list = rd_params->files_list;
     size_t files_number = rd_params->files_number;
@@ -46,14 +48,28 @@ void *read(void *param)
 
 void *produce(void *param)
 {
+    // init params
+    pr_params_t *pr_params = (pr_params_t *)param;
+    b_queue *queue_in = pr_params->queue_in;
+    b_queue *queue_out = pr_params->queue_out;
+    b_queue *filter = pr_params->filter;
     for (;;)
     {
+        // get task
+        in_task *in_task = bq_dequeue(queue_in);
+
+        // convolution
+        image_data *result_image = linear_convolution(in_task->src_image,filter);
+
+        // put task
+        bq_enqueue(queue_out,result_image);
     }
     return NULL;
 }
 
 void *consume(void *param)
-{
+{   
+    
     for (;;)
     {
     }
