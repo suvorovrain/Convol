@@ -5,6 +5,7 @@
 #include "include/io.h"
 #include <dirent.h>
 #include <errno.h>
+#include <libgen.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -62,11 +63,6 @@ image_data *load_image(char *path)
     image_data->components = n;
     return image_data;
 }
-
-#include <dirent.h>
-#include <errno.h>
-#include <stdlib.h>
-#include <string.h>
 
 int list_dir_entries(const char *dirpath, char ***out, size_t *count)
 {
@@ -148,4 +144,65 @@ int list_dir_entries(const char *dirpath, char ***out, size_t *count)
     *out = arr;
     *count = n;
     return 0;
+}
+
+// TODO: free
+char *path_trim(const char *path)
+{
+    if (!path){
+        return NULL;
+    }
+        
+    char *tmp = strdup(path);
+    if (!tmp){
+        return NULL;
+    }
+        
+
+    char *trimmed_name = basename(tmp);
+    if (!trimmed_name)
+    {
+        return NULL;
+    }
+    char *result = strdup(trimmed_name);
+
+    free(tmp);
+    return result;
+}
+
+char *path_join(const char *dir, const char *file)
+{
+    if (!dir || !*dir)
+    {
+        if (!file)
+        {
+            return strdup("");
+        }
+        return strdup(file);
+    }
+    if (!file || !*file)
+    {
+        return strdup(dir);
+    }
+
+    size_t nd = strlen(dir), nf = strlen(file);
+    int need_sep = dir[nd - 1] != '/';
+
+    size_t total = nd + (need_sep ? 1 : 0) + nf;
+    char *out = (char *)malloc(total + 1);
+    if (!out)
+    {
+        return NULL;
+    }
+
+    memcpy(out, dir, nd);
+    size_t pos = nd;
+    if (need_sep)
+    {
+        out[pos++] = '/';
+    }
+
+    memcpy(out + pos, file, nf);
+    out[total] = '\0';
+    return out;
 }
