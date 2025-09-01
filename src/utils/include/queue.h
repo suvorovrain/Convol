@@ -41,4 +41,7 @@ typedef struct
     char *image_name;
 } out_task;
 
+in_task *create_in_task(int id, image_data *image, char *filename);
+out_task *create_out_task(int id, image_data *image, char *filename);
+
 #endif // QUEUE_H

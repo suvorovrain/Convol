@@ -145,12 +145,24 @@ void bq_destroy(b_queue *queue) {
     free(queue);
 }
 
-in_task *create_in_task(int id, image_data *image){
+in_task *create_in_task(int id, image_data *image, char *filename){
     in_task *task = malloc(sizeof(*task));
     if (!task){
         return NULL;
     }
     task->id=id;
     task->src_image=image;
+    task->image_name=filename;
+    return task;
+}
+
+out_task *create_in_task(int id, image_data *image, char *filename){
+    out_task *task = malloc(sizeof(*task));
+    if (!task){
+        return NULL;
+    }
+    task->id=id;
+    task->result_image=image;
+    task->image_name=filename;
     return task;
 }

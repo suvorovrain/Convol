@@ -1,7 +1,7 @@
 #include "include/subjects.h"
+#include "../algo/include/linear_convolution.h"
 #include <stdbool.h>
 #include <stdlib.h>
-#include "../algo/include/linear_convolution.h"
 
 void *read(void *param)
 {
@@ -32,7 +32,7 @@ void *read(void *param)
 
         // create task
         int task_id = atomic_fetch_add_explicit(next_task_id, 1, memory_order_relaxed);
-        in_task *task = create_in_task(task_id, src_image);
+        in_task *task = create_in_task(task_id, src_image, filename);
         if (!task)
         {
             // TODO
@@ -52,26 +52,50 @@ void *produce(void *param)
     pr_params_t *pr_params = (pr_params_t *)param;
     b_queue *queue_in = pr_params->queue_in;
     b_queue *queue_out = pr_params->queue_out;
-    b_queue *filter = pr_params->filter;
+    convolution_filter *filter = pr_params->filter;
     for (;;)
     {
         // get task
         in_task *in_task = bq_dequeue(queue_in);
-
+        if (in_task->id == -1)
+        {
+            bq_enqueue(queue_out, NULL);
+            break;
+        }
         // convolution
-        image_data *result_image = linear_convolution(in_task->src_image,filter);
+        image_data *result_image = linear_convolution(in_task->src_image, filter);
+
+        // create task
+        out_task *out_task = create_out_task(in_task->id, result_image, in_task->image_name);
 
         // put task
-        bq_enqueue(queue_out,result_image);
+        bq_enqueue(queue_out, out_task);
     }
     return NULL;
 }
 
 void *consume(void *param)
-{   
-    
+{
+    // init params
+    cm_params_t *cm_params = (cm_params_t *)param;
+    b_queue *queue_out = cm_params->queue_out;
+    char *dest_folder = cm_params->dest_folder;
     for (;;)
     {
+        // get task
+        out_task *out_task = bq_dequeue(queue_out);
+        if (out_task->id == -1)
+        {
+            break;
+        }
+        // save picture
+        char *image_path = path_join(dest_folder,path_trim( out_task->image_name));
+        int res = save_image(image_path, out_task->result_image);
+        // TODO: error handling
+        // if (!res)
+        // {
+        //     return -1;
+        // }
     }
     return NULL;
 }

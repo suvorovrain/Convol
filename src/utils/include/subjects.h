@@ -21,12 +21,13 @@ typedef struct producer_parameters
     b_queue *queue_in;
     b_queue *queue_out;
     convolution_filter *filter;
+
 } pr_params_t;
 
 typedef struct consumer_parameters
 {
-    b_queue *queue_out
-    
+    b_queue *queue_out;
+    char *dest_folder;
 } cm_params_t;
 
 void *read(void *param);
