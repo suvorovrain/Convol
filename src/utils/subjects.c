@@ -1,5 +1,6 @@
 #include "include/subjects.h"
 #include "../algo/include/linear_convolution.h"
+#include <assert.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -59,7 +60,6 @@ void *produce(void *param)
         in_task *in_task = bq_dequeue(queue_in);
         if (in_task->id == -1)
         {
-            bq_enqueue(queue_out, NULL);
             break;
         }
         // convolution
@@ -89,7 +89,7 @@ void *consume(void *param)
             break;
         }
         // save picture
-        char *image_path = path_join(dest_folder,path_trim( out_task->image_name));
+        char *image_path = path_join(dest_folder, path_trim(out_task->image_name));
         int res = save_image(image_path, out_task->result_image);
         // TODO: error handling
         // if (!res)

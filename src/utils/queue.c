@@ -156,7 +156,7 @@ in_task *create_in_task(int id, image_data *image, char *filename){
     return task;
 }
 
-out_task *create_in_task(int id, image_data *image, char *filename){
+out_task *create_out_task(int id, image_data *image, char *filename){
     out_task *task = malloc(sizeof(*task));
     if (!task){
         return NULL;

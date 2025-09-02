@@ -7,7 +7,7 @@
 #define QUEUE_H
 
 #define error(...) (fprintf(stderr, __VA_ARGS__))
-
+#define PILL_TASK_ID -1
 typedef struct node
 {
     void *value;
