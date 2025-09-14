@@ -56,8 +56,8 @@ image_data *create_canvas(image_data *image)
 int queue_convolution(input_data *input, convolution_filter *filter)
 {
     // init queues
-    b_queue *in_queue = bq_init(IN_QUEUE_SIZE);
-    b_queue *out_queue = bq_init(OUT_QUEUE_SIZE);
+    b_queue *in_queue = bq_init((size_t)IN_QUEUE_SIZE);
+    b_queue *out_queue = bq_init((size_t)OUT_QUEUE_SIZE);
 
     // get files list
     char **src_images = input->src_images;
@@ -98,7 +98,7 @@ int queue_convolution(input_data *input, convolution_filter *filter)
         wk_params[i].queue_in = in_queue;
         wk_params[i].queue_out = out_queue;
         wk_params[i].convolution = func;
-        pthread_create(workers + i, NULL, work, wk_params);
+        pthread_create(workers + i, NULL, work, wk_params + i);
     }
     // init writers
     pthread_t writers[WRITERS_NUMBER];
@@ -107,7 +107,7 @@ int queue_convolution(input_data *input, convolution_filter *filter)
     {
         wr_params[i].dest_folder = input->folder_for_store;
         wr_params[i].queue_out = out_queue;
-        pthread_create(writers + i, NULL, write, wr_params);
+        pthread_create(writers + i, NULL, write, wr_params + i);
     }
 
     // join readers
