@@ -110,7 +110,7 @@ char **parse_source_images(char ***argv, int *count)
     char **files = malloc(capacity * sizeof(char *));
     if (!files)
     {
-        error("ERROR: realloc failed");
+        error("ERROR: malloc failed");
         return NULL;
     }
 
@@ -119,12 +119,14 @@ char **parse_source_images(char ***argv, int *count)
         if (n >= capacity)
         {
             capacity *= 2;
-            files = realloc(files, capacity * sizeof(char *));
-            if (!files)
+            char **tmp = realloc(files, capacity * sizeof(char *));
+            if (!tmp)
             {
+                free(files);
                 error("ERROR: realloc failed");
                 return NULL;
             }
+            files = tmp;
         }
         files[n++] = **argv;
         (*argv)++;
@@ -146,6 +148,7 @@ input_data *validate_input(int argc, char **argv)
     int img_count = 0;
     argv++;
     char **images = parse_source_images(&argv, &img_count);
+
     if (argc - img_count < SETTINGS_NUMBER)
     {
         error(USAGE_MSG);
@@ -154,6 +157,11 @@ input_data *validate_input(int argc, char **argv)
     input->src_images = images;
     input->images_number = img_count;
 
+    if (!(*argv))
+    {
+        error(USAGE_MSG);
+        return NULL;
+    }
     int effect = parse_effect(*argv);
     if (effect == -1)
     {
