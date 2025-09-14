@@ -81,7 +81,7 @@ convolution_filter *set_filter(enum effect eff, enum strength strength)
 }
 
 //----------------------------------------------------------------------------------------------
-// Blur
+// blur
 //----------------------------------------------------------------------------------------------
 
 const small_convolution_filter small_blur_filter = {.matrix =
@@ -143,7 +143,7 @@ convolution_filter *create_blur_convolution_filter(enum strength str)
 }
 
 //----------------------------------------------------------------------------------------------
-// Motion blur
+// motion blur
 //----------------------------------------------------------------------------------------------
 
 const small_convolution_filter small_motion_blur_filter = {.matrix =
@@ -206,7 +206,7 @@ convolution_filter *create_motion_blur_convolution_filter(enum strength str)
 }
 
 //----------------------------------------------------------------------------------------------
-// Find edges
+// find edges
 //----------------------------------------------------------------------------------------------
 
 const small_convolution_filter small_find_edges_filter = {.matrix =
@@ -269,7 +269,7 @@ convolution_filter *create_find_edges_convolution_filter(enum strength str)
 }
 
 //----------------------------------------------------------------------------------------------
-// Emboss
+// emboss
 //----------------------------------------------------------------------------------------------
 
 const small_convolution_filter small_emboss_filter = {.matrix =

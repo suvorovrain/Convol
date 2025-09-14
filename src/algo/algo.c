@@ -1,5 +1,3 @@
-#include "include/algo.h"
-
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,6 +7,7 @@
 #include "../utils/include/io.h"
 #include "../utils/include/parse.h"
 #include "../utils/include/subjects.h"
+#include "include/algo.h"
 #include "include/linear_convolution.h"
 #include "include/parallel_convolution.h"
 
@@ -84,8 +83,8 @@ int queue_convolution(input_data *input, convolution_filter *filter)
     }
 
     // init producers
-    pthread_t producers[WORKERS_NUMBER];
-    pr_params_t pr_params[WORKERS_NUMBER];
+    pthread_t workers[WORKERS_NUMBER];
+    wk_params_t wk_params[WORKERS_NUMBER];
 
     convolution_func func = get_convolution(input->algorithm);
     if (!func)
@@ -95,20 +94,20 @@ int queue_convolution(input_data *input, convolution_filter *filter)
 
     for (int i = 0; i < WORKERS_NUMBER; i++)
     {
-        pr_params[i].filter = filter;
-        pr_params[i].queue_in = in_queue;
-        pr_params[i].queue_out = out_queue;
-        pr_params[i].convolution = func;
-        pthread_create(producers + i, NULL, produce, pr_params);
+        wk_params[i].filter = filter;
+        wk_params[i].queue_in = in_queue;
+        wk_params[i].queue_out = out_queue;
+        wk_params[i].convolution = func;
+        pthread_create(workers + i, NULL, work, wk_params);
     }
-    // init consumers
-    pthread_t consumers[WRITERS_NUMBER];
-    cm_params_t cm_params[WRITERS_NUMBER];
+    // init writers
+    pthread_t writers[WRITERS_NUMBER];
+    wr_params_t wr_params[WRITERS_NUMBER];
     for (int i = 0; i < WRITERS_NUMBER; i++)
     {
-        cm_params[i].dest_folder = input->folder_for_store;
-        cm_params[i].queue_out = out_queue;
-        pthread_create(consumers + i, NULL, consume, cm_params);
+        wr_params[i].dest_folder = input->folder_for_store;
+        wr_params[i].queue_out = out_queue;
+        pthread_create(writers + i, NULL, write, wr_params);
     }
 
     // join readers
@@ -124,7 +123,7 @@ int queue_convolution(input_data *input, convolution_filter *filter)
     // join producers
     for (int i = 0; i < WORKERS_NUMBER; i++)
     {
-        pthread_join(producers[i], NULL);
+        pthread_join(workers[i], NULL);
     }
     for (int i = 0; i < WRITERS_NUMBER; i++)
     {
@@ -134,7 +133,7 @@ int queue_convolution(input_data *input, convolution_filter *filter)
     // join consumers
     for (int i = 0; i < WRITERS_NUMBER; i++)
     {
-        pthread_join(consumers[i], NULL);
+        pthread_join(writers[i], NULL);
     }
     free(src_images);
 

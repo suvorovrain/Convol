@@ -49,14 +49,14 @@ void *read(void *param)
     return NULL;
 }
 
-void *produce(void *param)
+void *work(void *param)
 {
     // init params
-    pr_params_t *pr_params = (pr_params_t *)param;
-    b_queue *queue_in = pr_params->queue_in;
-    b_queue *queue_out = pr_params->queue_out;
-    convolution_func convolution = pr_params->convolution;
-    convolution_filter *filter = pr_params->filter;
+    wk_params_t *wk_params = (wk_params_t *)param;
+    b_queue *queue_in = wk_params->queue_in;
+    b_queue *queue_out = wk_params->queue_out;
+    convolution_func convolution = wk_params->convolution;
+    convolution_filter *filter = wk_params->filter;
     for (;;)
     {
         // get task
@@ -77,12 +77,12 @@ void *produce(void *param)
     return NULL;
 }
 
-void *consume(void *param)
+void *write(void *param)
 {
     // init params
-    cm_params_t *cm_params = (cm_params_t *)param;
-    b_queue *queue_out = cm_params->queue_out;
-    char *dest_folder = cm_params->dest_folder;
+    wr_params_t *wr_params = (wr_params_t *)param;
+    b_queue *queue_out = wr_params->queue_out;
+    char *dest_folder = wr_params->dest_folder;
     for (;;)
     {
         // get task
@@ -92,9 +92,9 @@ void *consume(void *param)
             break;
         }
         // save picture
-        char *dest_dir = path_join(dest_folder, add_suffix(path_trim(out_task->image_name)));
+        char *result_path = path_join(dest_folder, add_suffix(path_trim(out_task->image_name)));
 
-        int res = save_image(dest_dir, out_task->result_image);
+        int res = save_image(result_path, out_task->result_image);
         // TODO: error handling
         // if (!res)
         // {

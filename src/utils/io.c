@@ -112,6 +112,7 @@ char *path_join(const char *dir, const char *file)
     char *out = (char *)malloc(total + 1);
     if (!out)
     {
+        error("ERROR: malloc failed");
         return NULL;
     }
 
@@ -136,7 +137,10 @@ char *add_suffix(const char *image_name)
     size_t new_len = base_len + strlen(suffix) + strlen(ext);
     char *result = malloc(new_len + 1);
     if (!result)
+    {
+        error("ERROR: malloc failed");
         return NULL;
+    }
     memcpy(result, image_name, base_len);
     strcpy(result + base_len, suffix);
     strcpy(result + base_len + strlen(suffix), ext);

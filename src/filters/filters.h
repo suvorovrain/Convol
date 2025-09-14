@@ -6,31 +6,32 @@
 
 #define error(...) (fprintf(stderr, __VA_ARGS__))
 
-
-
-
 #define SMALL_FILTER_SIZE 5
-typedef struct {
+typedef struct
+{
     double matrix[SMALL_FILTER_SIZE][SMALL_FILTER_SIZE];
     double factor;
     double bias;
 } small_convolution_filter;
 
 #define MEDIUM_FILTER_SIZE 7
-typedef struct {
+typedef struct
+{
     double matrix[MEDIUM_FILTER_SIZE][MEDIUM_FILTER_SIZE];
     double factor;
     double bias;
 } medium_convolution_filter;
 
 #define BIG_FILTER_SIZE 9
-typedef struct {
+typedef struct
+{
     double matrix[BIG_FILTER_SIZE][BIG_FILTER_SIZE];
     double factor;
     double bias;
 } big_convolution_filter;
 
-typedef struct {
+typedef struct
+{
     double **matrix;
     double factor;
     double bias;

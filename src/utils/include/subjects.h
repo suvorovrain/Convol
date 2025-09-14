@@ -1,7 +1,7 @@
+#include "../../algo/include/algo.h"
+#include "../../filters/filters.h"
 #include "queue.h"
 #include <stdatomic.h>
-#include "../../filters/filters.h"
-#include "../../algo/include/algo.h"
 
 #ifndef SUBJECTS_H
 #define SUBJECTS_H
@@ -17,22 +17,22 @@ typedef struct reader_parameters
     atomic_int *next_task_id;
 } rd_params_t;
 
-typedef struct producer_parameters
+typedef struct worker_parameters
 {
     convolution_func convolution;
     b_queue *queue_in;
     b_queue *queue_out;
     convolution_filter *filter;
-} pr_params_t;
+} wk_params_t;
 
-typedef struct consumer_parameters
+typedef struct writer_parameters
 {
     b_queue *queue_out;
     char *dest_folder;
-} cm_params_t;
+} wr_params_t;
 
 void *read(void *param);
-void *produce(void *param);
-void *consume(void *param);
+void *work(void *param);
+void *write(void *param);
 
 #endif // SUBJECTS_H

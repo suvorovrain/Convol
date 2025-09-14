@@ -41,6 +41,7 @@ image_data *parallel_pixel_convolution(image_data *image, convolution_filter *fi
                 {
                     ix = x - filter_size / 2 + fx;
                     iy = y - filter_size / 2 + fy;
+
                     if (ix < 0)
                     {
                         ix = 0;
@@ -65,10 +66,11 @@ image_data *parallel_pixel_convolution(image_data *image, convolution_filter *fi
                 }
                 idx = (y * width + x) * components;
 
-                result_image[idx + 0] = (unsigned char)MIN(MAX((int)(factor * red + bias), 0), 255);
-                result_image[idx + 1] =
+                result_image[idx + RED] =
+                    (unsigned char)MIN(MAX((int)(factor * red + bias), 0), 255);
+                result_image[idx + GREEN] =
                     (unsigned char)MIN(MAX((int)(factor * green + bias), 0), 255);
-                result_image[idx + 2] =
+                result_image[idx + BLUE] =
                     (unsigned char)MIN(MAX((int)(factor * blue + bias), 0), 255);
             }
         }
@@ -134,10 +136,11 @@ image_data *parallel_row_convolution(image_data *image, convolution_filter *filt
                 }
                 idx = (y * width + x) * components;
 
-                result_image[idx + 0] = (unsigned char)MIN(MAX((int)(factor * red + bias), 0), 255);
-                result_image[idx + 1] =
+                result_image[idx + RED] =
+                    (unsigned char)MIN(MAX((int)(factor * red + bias), 0), 255);
+                result_image[idx + GREEN] =
                     (unsigned char)MIN(MAX((int)(factor * green + bias), 0), 255);
-                result_image[idx + 2] =
+                result_image[idx + BLUE] =
                     (unsigned char)MIN(MAX((int)(factor * blue + bias), 0), 255);
             }
         }
@@ -203,10 +206,11 @@ image_data *parallel_column_convolution(image_data *image, convolution_filter *f
                 }
                 idx = (y * width + x) * components;
 
-                result_image[idx + 0] = (unsigned char)MIN(MAX((int)(factor * red + bias), 0), 255);
-                result_image[idx + 1] =
+                result_image[idx + RED] =
+                    (unsigned char)MIN(MAX((int)(factor * red + bias), 0), 255);
+                result_image[idx + GREEN] =
                     (unsigned char)MIN(MAX((int)(factor * green + bias), 0), 255);
-                result_image[idx + 2] =
+                result_image[idx + BLUE] =
                     (unsigned char)MIN(MAX((int)(factor * blue + bias), 0), 255);
             }
         }

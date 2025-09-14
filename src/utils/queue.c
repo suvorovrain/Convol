@@ -4,6 +4,10 @@
 #include <stdatomic.h>
 #include <stdbool.h>
 #include <stdlib.h>
+
+//-------------------------------------------------------------------------------
+// The Art of Multiprocessor Programming by Maurice Herlihy. Chapter 10.3
+//-------------------------------------------------------------------------------
 void bq_enqueue(b_queue *queue, void *item)
 {
     bool must_wake_dequeuers = false;

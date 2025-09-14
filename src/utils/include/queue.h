@@ -7,6 +7,7 @@
 #define QUEUE_H
 
 #define error(...) (fprintf(stderr, __VA_ARGS__))
+// used to tell the readers/workers/writets that there is no more tasks
 #define PILL_TASK_ID -1
 typedef struct node
 {

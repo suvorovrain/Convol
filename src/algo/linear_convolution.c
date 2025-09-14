@@ -60,10 +60,11 @@ image_data *linear_convolution(image_data *image, convolution_filter *filter)
                 }
                 int idx = (y * width + x) * components;
 
-                result_image[idx + 0] = (unsigned char)MIN(MAX((int)(factor * red + bias), 0), 255);
-                result_image[idx + 1] =
+                result_image[idx + RED] =
+                    (unsigned char)MIN(MAX((int)(factor * red + bias), 0), 255);
+                result_image[idx + GREEN] =
                     (unsigned char)MIN(MAX((int)(factor * green + bias), 0), 255);
-                result_image[idx + 2] =
+                result_image[idx + BLUE] =
                     (unsigned char)MIN(MAX((int)(factor * blue + bias), 0), 255);
             }
         }

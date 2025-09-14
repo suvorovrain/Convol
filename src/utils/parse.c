@@ -100,10 +100,6 @@ int has_suffix(const char *str, const char *suffix)
 {
     size_t lenstr = strlen(str);
     size_t lensuffix = strlen(suffix);
-    if (lensuffix > lenstr)
-    {
-        return 0;
-    }
     return strncmp(str + lenstr - lensuffix, suffix, lensuffix) == 0;
 }
 
@@ -114,6 +110,7 @@ char **parse_source_images(char ***argv, int *count)
     char **files = malloc(capacity * sizeof(char *));
     if (!files)
     {
+        error("ERROR: realloc failed");
         return NULL;
     }
 
@@ -125,6 +122,7 @@ char **parse_source_images(char ***argv, int *count)
             files = realloc(files, capacity * sizeof(char *));
             if (!files)
             {
+                error("ERROR: realloc failed");
                 return NULL;
             }
         }
@@ -144,18 +142,18 @@ input_data *validate_input(int argc, char **argv)
         error("ERROR: malloc failed\n");
         return NULL;
     }
+
     int img_count = 0;
     argv++;
     char **images = parse_source_images(&argv, &img_count);
-
     if (argc - img_count < SETTINGS_NUMBER)
     {
         error(USAGE_MSG);
         return NULL;
-    };
-
+    }
     input->src_images = images;
     input->images_number = img_count;
+
     int effect = parse_effect(*argv);
     if (effect == -1)
     {
@@ -169,17 +167,20 @@ input_data *validate_input(int argc, char **argv)
     {
         error(USAGE_MSG);
         return NULL;
-    };
+    }
     input->effect_strength = strength;
+
     input->folder_for_store = *(++argv);
+
     int algorithm = parse_algorithm_type(*(++argv));
     if (algorithm == -1)
     {
         error(USAGE_MSG);
         return NULL;
-    };
-    int type;
+    }
     input->algorithm = algorithm;
+
+    int type;
     argv++;
     if (*argv == NULL)
     {
@@ -194,7 +195,7 @@ input_data *validate_input(int argc, char **argv)
             return NULL;
         }
     }
-
     input->type = type;
+
     return input;
 }

@@ -1,5 +1,5 @@
-#include "../../utils/include/io.h"
 #include "../../filters/filters.h"
+#include "../../utils/include/io.h"
 #include "../../utils/include/parse.h"
 #include <stdio.h>
 
@@ -14,8 +14,8 @@
 
 #define error(...) (fprintf(stderr, __VA_ARGS__))
 
-#define MIN(a,b) ((a) < (b) ? (a) : (b))
-#define MAX(a,b) ((a) > (b) ? (a) : (b))
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define RED 0
 #define GREEN 1
 #define BLUE 2
@@ -23,8 +23,6 @@
 image_data *create_canvas(image_data *image);
 
 typedef image_data *(*convolution_func)(image_data *, convolution_filter *);
-
-image_data *convolution(image_data *image, convolution_filter *filter, int type);
 int classic_convolution(input_data *input, convolution_filter *filter);
 int queue_convolution(input_data *input, convolution_filter *filter);
 
