@@ -1,4 +1,5 @@
 #include "include/queue.h"
+
 #include <pthread.h>
 #include <stdatomic.h>
 #include <stdbool.h>
@@ -72,11 +73,12 @@ void *bq_dequeue(b_queue *queue)
 
 b_queue *bq_init(size_t capacity)
 {
-    if (capacity==0){
+    if (capacity == 0)
+    {
         return NULL;
     }
 
-    b_queue *queue = calloc(1,sizeof (*queue));
+    b_queue *queue = calloc(1, sizeof(*queue));
     if (!queue)
     {
         error("Error: malloc failed\n");
@@ -90,11 +92,11 @@ b_queue *bq_init(size_t capacity)
         free(queue);
         return NULL;
     };
-    sentinel->value=NULL;
-    sentinel->next=NULL;
-    queue->head=queue->tail=sentinel;
+    sentinel->value = NULL;
+    sentinel->next = NULL;
+    queue->head = queue->tail = sentinel;
 
-    atomic_init(&(queue->size),0);
+    atomic_init(&(queue->size), 0);
 
     int init_result = pthread_mutex_init(&(queue->enq_lock), NULL);
     if (init_result != 0)
@@ -113,7 +115,7 @@ b_queue *bq_init(size_t capacity)
         return NULL;
     };
 
-    init_result = pthread_cond_init(&(queue->not_empty_cond),NULL);
+    init_result = pthread_cond_init(&(queue->not_empty_cond), NULL);
     if (init_result != 0)
     {
         free(queue);
@@ -121,7 +123,7 @@ b_queue *bq_init(size_t capacity)
         error("Error: condition variable initialization failed\n");
         return NULL;
     };
-    init_result = pthread_cond_init(&(queue->not_full_cond),NULL); 
+    init_result = pthread_cond_init(&(queue->not_full_cond), NULL);
     if (init_result != 0)
     {
         free(queue);
@@ -129,12 +131,14 @@ b_queue *bq_init(size_t capacity)
         error("Error: condition variable initialization failed\n");
         return NULL;
     };
-    queue->capacity=capacity;
+    queue->capacity = capacity;
     return queue;
 }
 
-void bq_destroy(b_queue *queue) {
-    if (!queue){
+void bq_destroy(b_queue *queue)
+{
+    if (!queue)
+    {
         return;
     };
     free(queue->head);
@@ -145,24 +149,28 @@ void bq_destroy(b_queue *queue) {
     free(queue);
 }
 
-in_task *create_in_task(int id, image_data *image, char *filename){
+in_task *create_in_task(int id, image_data *image, char *filename)
+{
     in_task *task = malloc(sizeof(*task));
-    if (!task){
+    if (!task)
+    {
         return NULL;
     }
-    task->id=id;
-    task->src_image=image;
-    task->image_name=filename;
+    task->id = id;
+    task->src_image = image;
+    task->image_name = filename;
     return task;
 }
 
-out_task *create_out_task(int id, image_data *image, char *filename){
+out_task *create_out_task(int id, image_data *image, char *filename)
+{
     out_task *task = malloc(sizeof(*task));
-    if (!task){
+    if (!task)
+    {
         return NULL;
     }
-    task->id=id;
-    task->result_image=image;
-    task->image_name=filename;
+    task->id = id;
+    task->result_image = image;
+    task->image_name = filename;
     return task;
 }

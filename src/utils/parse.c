@@ -1,14 +1,16 @@
 
-#include "../algo/include/algo.h"
-#include "../filters/filters.h"
-#include "include/parce.h"
+#include "include/parse.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "../algo/include/algo.h"
+#include "../filters/filters.h"
+
 #define USAGE_MSG                                                                                  \
     "Usage: ./convol <src_image> <blur/motion_blur/find_edges/emboss> <1/2/3> <dest> "             \
-    "<linear/parallel_pixel/parallel_row/parallel_column/stream>\n"
+    "<linear/parallel_pixel/parallel_row/parallel_column/stream> <queue/classic>\n"
 
 enum effect parse_effect(const char *str)
 {
@@ -85,41 +87,109 @@ enum strength parse_effect_strength(const char *str)
     return -1;
 }
 
+enum type parse_type(const char *type)
+{
+    if (strcmp(type, "classic") == 0)
+    {
+        return CLASSIC;
+    }
+
+    if (strcmp(type, "queue") == 0)
+    {
+        return QUEUE;
+    }
+    return -1;
+}
+
+int has_suffix(const char *str, const char *suffix)
+{
+    size_t lenstr = strlen(str);
+    size_t lensuffix = strlen(suffix);
+    if (lensuffix > lenstr)
+    {
+        return 0;
+    }
+    return strncmp(str + lenstr - lensuffix, suffix, lensuffix) == 0;
+}
+
+char **parse_source_images(char ***argv, int *count)
+{
+    int capacity = 8;
+    int n = 0;
+    char **files = malloc(capacity * sizeof(char *));
+    if (!files)
+    {
+        return NULL;
+    }
+
+    while (**argv && has_suffix(**argv, ".bmp"))
+    {
+        if (n >= capacity)
+        {
+            capacity *= 2;
+            files = realloc(files, capacity * sizeof(char *));
+            if (!files)
+            {
+                return NULL;
+            }
+        }
+        files[n++] = **argv;
+        (*argv)++;
+    }
+
+    *count = n;
+    return files;
+}
+
 input_data *validate_input(int argc, char **argv)
 {
-    if (argc != 6)
-    {
-        error(USAGE_MSG);
-        return NULL;
-    };
     input_data *input = malloc(sizeof(*input));
     if (!input)
     {
         error("ERROR: malloc failed\n");
         return NULL;
     }
-    int effect = parse_effect(argv[2]);
+    int img_count = 0;
+    argv++;
+    char **images = parse_source_images(&argv, &img_count);
+
+    if (argc - img_count < SETTINGS_NUMBER)
+    {
+        error(USAGE_MSG);
+        return NULL;
+    };
+
+    input->src_images = images;
+    input->images_number = img_count;
+    int effect = parse_effect(*argv);
     if (effect == -1)
     {
         error(USAGE_MSG);
         return NULL;
     };
-    int strength = parse_effect_strength(argv[3]);
+    input->effect_type = effect;
+
+    int strength = parse_effect_strength(*(++argv));
     if (strength == -1)
     {
         error(USAGE_MSG);
         return NULL;
     };
-    int algorithm = parse_algorithm_type(argv[5]);
+    input->effect_strength = strength;
+    input->folder_for_store = *(++argv);
+    int algorithm = parse_algorithm_type(*(++argv));
     if (algorithm == -1)
     {
         error(USAGE_MSG);
         return NULL;
     };
-    input->src_image = argv[1];
-    input->effect_type = effect;
-    input->effect_strength = strength;
-    input->folder_for_store = argv[4];
     input->algorithm = algorithm;
+    int type = parse_type(*(++argv));
+    if (type == -1)
+    {
+        error(USAGE_MSG);
+        return NULL;
+    }
+    input->type = type;
     return input;
 }

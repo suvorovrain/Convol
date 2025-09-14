@@ -1,8 +1,10 @@
 #include "include/subjects.h"
-#include "../algo/include/linear_convolution.h"
+
 #include <assert.h>
 #include <stdbool.h>
 #include <stdlib.h>
+
+#include "../algo/include/linear_convolution.h"
 
 void *read(void *param)
 {
@@ -89,8 +91,9 @@ void *consume(void *param)
             break;
         }
         // save picture
-        char *image_path = path_join(dest_folder, path_trim(out_task->image_name));
-        int res = save_image(image_path, out_task->result_image);
+        char *dest_dir = path_join(dest_folder, add_suffix(path_trim(out_task->image_name)));
+
+        int res = save_image(dest_dir, out_task->result_image);
         // TODO: error handling
         // if (!res)
         // {

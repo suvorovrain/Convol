@@ -1,3 +1,4 @@
+#include "../utils/include/parse.h"
 #include <stdio.h>
 
 #ifndef FILTERS_H
@@ -5,23 +6,8 @@
 
 #define error(...) (fprintf(stderr, __VA_ARGS__))
 
-enum effect {
-    BLUR = 1,
-    MOTION_BLUR = 2,
-    FIND_EDGES = 3,
-    EMBOSS = 4,
-};
 
-//-------------------------------------------------------------------------------
-// defines the strengh of applied effect
-//-------------------------------------------------------------------------------
 
-enum strength
-{
-    SMALL = 1,
-    MEDIUM = 2,
-    BIG = 3,
-};
 
 #define SMALL_FILTER_SIZE 5
 typedef struct {

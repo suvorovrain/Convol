@@ -1,8 +1,9 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "../filters/filters.h"
 #include "../utils/include/io.h"
 #include "include/algo.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 image_data *linear_convolution(image_data *image, convolution_filter *filter)
 {

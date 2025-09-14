@@ -1,8 +1,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "../../vendor/stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "../../vendor/stb_image_write.h"
-#include "include/io.h"
 #include <dirent.h>
 #include <errno.h>
 #include <libgen.h>
@@ -11,6 +9,9 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+
+#include "../../vendor/stb_image_write.h"
+#include "include/io.h"
 
 int save_image(const char *dest, image_data *image)
 {
@@ -37,7 +38,7 @@ int save_image(const char *dest, image_data *image)
     {
         error("ERROR: image save failed\n");
         return 1;
-    }
+    };
     return 0;
 }
 
@@ -64,100 +65,19 @@ image_data *load_image(char *path)
     return image_data;
 }
 
-int list_dir_entries(const char *dirpath, char ***out, size_t *count)
-{
-    if (!dirpath || !out || !count)
-    {
-        return 1;
-    }
-
-    *out = NULL;
-    *count = 0;
-
-    DIR *src_dir = opendir(dirpath);
-    if (!src_dir)
-    {
-        return 1;
-    }
-
-    size_t dl = strlen(dirpath);
-    int need_slash = (dl > 0 && dirpath[dl - 1] != '/');
-
-    char **arr = NULL;
-    size_t n = 0, cap = 0;
-
-    struct dirent *de;
-    while ((de = readdir(src_dir)) != NULL)
-    {
-        const char *name = de->d_name;
-        if ((name[0] == '.' && name[1] == '\0') ||
-            (name[0] == '.' && name[1] == '.' && name[2] == '\0'))
-        {
-            continue;
-        }
-
-        size_t nl = strlen(name);
-        size_t plen = dl + need_slash + nl + 1;
-
-        char *path = (char *)malloc(plen);
-        if (!path)
-        {
-            closedir(src_dir);
-            for (size_t i = 0; i < n; ++i)
-            {
-                free(arr[i]);
-            }
-            free(arr);
-            return 1;
-        }
-
-        memcpy(path, dirpath, dl);
-        if (need_slash)
-        {
-            path[dl] = '/';
-        }
-        memcpy(path + dl + need_slash, name, nl + 1);
-
-        if (n == cap)
-        {
-            size_t newcap = cap ? cap * 2 : 32;
-            char **tmp = (char **)realloc(arr, newcap * sizeof(char *));
-            if (!tmp)
-            {
-                free(path);
-                closedir(src_dir);
-                for (size_t i = 0; i < n; ++i)
-                {
-                    free(arr[i]);
-                }
-                free(arr);
-                return 1;
-            }
-            arr = tmp;
-            cap = newcap;
-        }
-
-        arr[n++] = path;
-    }
-
-    closedir(src_dir);
-    *out = arr;
-    *count = n;
-    return 0;
-}
-
 // TODO: free
 char *path_trim(const char *path)
 {
-    if (!path){
+    if (!path)
+    {
         return NULL;
     }
-        
+
     char *tmp = strdup(path);
-    if (!tmp){
+    if (!tmp)
+    {
         return NULL;
     }
-        
 
     char *trimmed_name = basename(tmp);
     if (!trimmed_name)
@@ -205,4 +125,20 @@ char *path_join(const char *dir, const char *file)
     memcpy(out + pos, file, nf);
     out[total] = '\0';
     return out;
+}
+
+char *add_suffix(const char *image_name)
+{
+    const char *dot = strrchr(image_name, '.');
+    size_t base_len = (size_t)(dot - image_name);
+    const char *ext = dot;
+    const char *suffix = "_edited";
+    size_t new_len = base_len + strlen(suffix) + strlen(ext);
+    char *result = malloc(new_len + 1);
+    if (!result)
+        return NULL;
+    memcpy(result, image_name, base_len);
+    strcpy(result + base_len, suffix);
+    strcpy(result + base_len + strlen(suffix), ext);
+    return result;
 }
