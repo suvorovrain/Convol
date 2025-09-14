@@ -117,7 +117,7 @@ int queue_convolution(input_data *input, convolution_filter *filter)
     }
     for (int i = 0; i < WORKERS_NUMBER; i++)
     {
-        task *task = create_in_task(PILL_TASK_ID, NULL, NULL);
+        in_task *task = create_in_task(PILL_TASK_ID, NULL, NULL);
         bq_enqueue(in_queue, task);
     }
     // join producers
@@ -127,7 +127,7 @@ int queue_convolution(input_data *input, convolution_filter *filter)
     }
     for (int i = 0; i < WRITERS_NUMBER; i++)
     {
-        task *task = create_out_task(PILL_TASK_ID, NULL, NULL);
+        out_task *task = create_out_task(PILL_TASK_ID, NULL, NULL);
         bq_enqueue(out_queue, task);
     }
     // join consumers

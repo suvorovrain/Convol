@@ -30,20 +30,20 @@ void *bq_dequeue(b_queue *q);
 b_queue *bq_init(size_t capacity);
 void bq_destroy(b_queue *q);
 
-// typedef struct
-// {
-//     int id;
-//     image_data *src_image;
-//     char *image_name;
-// } in_task;
+typedef struct
+{
+    int id;
+    image_data *src_image;
+    char *image_name;
+} in_task;
 typedef struct
 {
     int id;
     image_data *result_image;
     char *image_name;
-} task;
+} out_task;
 
-// in_task *create_in_task(int id, image_data *image, char *filename);
-task *create_out_task(int id, image_data *image, char *filename);
+in_task *create_in_task(int id, image_data *image, char *filename);
+out_task *create_out_task(int id, image_data *image, char *filename);
 
 #endif // QUEUE_H
