@@ -8,6 +8,7 @@
 
 #define error(...) (fprintf(stderr, __VA_ARGS__))
 // used to tell the readers/workers/writets that there is no more tasks
+
 #define PILL_TASK_ID -1
 typedef struct node
 {
@@ -24,25 +25,25 @@ typedef struct b_queue
     size_t capacity;
 } b_queue;
 
-void bq_enqueue(b_queue *q, void *item);
+int bq_enqueue(b_queue *q, void *item);
 void *bq_dequeue(b_queue *q);
 b_queue *bq_init(size_t capacity);
 void bq_destroy(b_queue *q);
 
-typedef struct
-{
-    int id;
-    image_data *src_image;
-    char *image_name;
-} in_task;
+// typedef struct
+// {
+//     int id;
+//     image_data *src_image;
+//     char *image_name;
+// } in_task;
 typedef struct
 {
     int id;
     image_data *result_image;
     char *image_name;
-} out_task;
+} task;
 
-in_task *create_in_task(int id, image_data *image, char *filename);
-out_task *create_out_task(int id, image_data *image, char *filename);
+// in_task *create_in_task(int id, image_data *image, char *filename);
+task *create_out_task(int id, image_data *image, char *filename);
 
 #endif // QUEUE_H

@@ -8,14 +8,15 @@
 //-------------------------------------------------------------------------------
 // The Art of Multiprocessor Programming by Maurice Herlihy. Chapter 10.3
 //-------------------------------------------------------------------------------
-void bq_enqueue(b_queue *queue, void *item)
+
+int bq_enqueue(b_queue *queue, void *item)
 {
     bool must_wake_dequeuers = false;
     node *element = malloc(sizeof(node));
     if (!element)
     {
-        // TODO: handle
-        return;
+        error("ERROR: malloc failed");
+        return -1;
     };
     element->value = item;
     element->next = NULL;
@@ -39,6 +40,7 @@ void bq_enqueue(b_queue *queue, void *item)
         pthread_cond_broadcast(&(queue->not_empty_cond));
         pthread_mutex_unlock(&(queue->deq_lock));
     };
+    return 0;
 }
 
 void *bq_dequeue(b_queue *queue)
@@ -153,24 +155,26 @@ void bq_destroy(b_queue *queue)
     free(queue);
 }
 
-in_task *create_in_task(int id, image_data *image, char *filename)
-{
-    in_task *task = malloc(sizeof(*task));
-    if (!task)
-    {
-        return NULL;
-    }
-    task->id = id;
-    task->src_image = image;
-    task->image_name = filename;
-    return task;
-}
+// in_task *create_in_task(int id, image_data *image, char *filename)
+// {
+//     in_task *task = malloc(sizeof(*task));
+//     if (!task)
+//     {
+//         error("ERROR: malloc failed");
+//         return NULL;
+//     }
+//     task->id = id;
+//     task->src_image = image;
+//     task->image_name = filename;
+//     return task;
+// }
 
-out_task *create_out_task(int id, image_data *image, char *filename)
+task *create_out_task(int id, image_data *image, char *filename)
 {
-    out_task *task = malloc(sizeof(*task));
+    task *task = malloc(sizeof(*task));
     if (!task)
     {
+        error("ERROR: malloc failed");
         return NULL;
     }
     task->id = id;

@@ -18,32 +18,34 @@ void *read(void *param)
 
     for (;;)
     {
+        // get filename
         size_t file_id = atomic_fetch_add_explicit(next_file_id, 1, memory_order_relaxed);
         if (file_id >= files_number)
         {
             break;
         }
-        // read file
         char *filename = files_list[file_id];
 
+        // load file
         image_data *src_image = load_image(filename);
         if (!src_image)
         {
-            // TODO
-            assert(false);
+            break;
         }
 
-        // create task
+        // create in_task
         int task_id = atomic_fetch_add_explicit(next_task_id, 1, memory_order_relaxed);
         in_task *task = create_in_task(task_id, src_image, filename);
         if (!task)
         {
-            // TODO
-            assert(false);
+            break;
         }
-
-        // put task in queue
-        bq_enqueue(queue_in, task);
+        
+        // put in_task
+        int res = bq_enqueue(queue_in, task);
+        if (res){
+            break;
+        }
     }
 
     return NULL;
@@ -59,17 +61,24 @@ void *work(void *param)
     convolution_filter *filter = wk_params->filter;
     for (;;)
     {
-        // get task
+        // get in_task
         in_task *in_task = bq_dequeue(queue_in);
         if (in_task->id == -1)
         {
             break;
         }
+
         // convolution
         image_data *result_image = convolution(in_task->src_image, filter);
+        if (!result_image){
+            break;
+        }
 
-        // create task
+        // create out_task
         out_task *out_task = create_out_task(in_task->id, result_image, in_task->image_name);
+        if (!out_task){
+            break;
+        }
 
         // put task
         bq_enqueue(queue_out, out_task);
@@ -91,15 +100,14 @@ void *write(void *param)
         {
             break;
         }
+
         // save picture
         char *result_path = path_join(dest_folder, add_suffix(path_trim(out_task->image_name)));
-
         int res = save_image(result_path, out_task->result_image);
-        // TODO: error handling
-        // if (!res)
-        // {
-        //     return -1;
-        // }
+        if (!res)
+        {
+            break;
+        }
     }
     return NULL;
 }
