@@ -18,17 +18,17 @@ typedef struct node
 
 typedef struct b_queue
 {
-    pthread_mutex_t enq_lock, deq_lock;
+    pthread_mutex_t lock;
     pthread_cond_t not_empty_cond, not_full_cond;
     atomic_size_t size;
     node *head, *tail;
     size_t capacity;
 } b_queue;
 
-int bq_enqueue(b_queue *q, void *item);
-void *bq_dequeue(b_queue *q);
+int bq_enqueue(b_queue *queue, void *item);
+void *bq_dequeue(b_queue *queue);
 b_queue *bq_init(size_t capacity);
-void bq_destroy(b_queue *q);
+void bq_destroy(b_queue *queue);
 
 typedef struct
 {

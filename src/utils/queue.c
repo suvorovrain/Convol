@@ -5,76 +5,55 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-//-------------------------------------------------------------------------------
-// The Art of Multiprocessor Programming by Maurice Herlihy. Chapter 10.3
-//-------------------------------------------------------------------------------
-
 int bq_enqueue(b_queue *queue, void *item)
 {
-    bool must_wake_dequeuers = false;
-    node *element = malloc(sizeof(node));
+    node *element = malloc(sizeof *element);
     if (!element)
     {
-        error("ERROR: malloc failed");
         return -1;
-    };
+    }
     element->value = item;
     element->next = NULL;
 
-    pthread_mutex_lock(&(queue->enq_lock));
-    while (atomic_load_explicit(&queue->size, memory_order_relaxed) == queue->capacity)
+    pthread_mutex_lock(&queue->lock);
+    while (queue->size == queue->capacity)
     {
-        pthread_cond_wait(&(queue->not_full_cond), &(queue->enq_lock));
+        pthread_cond_wait(&queue->not_full_cond, &queue->lock);
     }
+
     queue->tail->next = element;
     queue->tail = element;
-    size_t prev = atomic_fetch_add_explicit(&(queue->size), 1, memory_order_relaxed);
-    if (prev == 0)
-    {
-        must_wake_dequeuers = true;
-    }
-    pthread_mutex_unlock(&(queue->enq_lock));
-    if (must_wake_dequeuers)
-    {
-        pthread_mutex_lock(&(queue->deq_lock));
-        pthread_cond_broadcast(&(queue->not_empty_cond));
-        pthread_mutex_unlock(&(queue->deq_lock));
-    };
+    queue->size++;
+
+    pthread_cond_signal(&queue->not_empty_cond);
+    pthread_mutex_unlock(&queue->lock);
     return 0;
+    ;
 }
 
 void *bq_dequeue(b_queue *queue)
 {
-    void *result;
-    bool must_wake_enqueuers = false;
-    node *old_head, *n;
-
-    pthread_mutex_lock(&(queue->deq_lock));
+    pthread_mutex_lock(&queue->lock);
     while (queue->head->next == NULL)
     {
-        pthread_cond_wait(&(queue->not_empty_cond), &(queue->deq_lock));
+        pthread_cond_wait(&queue->not_empty_cond, &queue->lock);
     }
 
-    old_head = queue->head;
-    n = old_head->next;
-    result = n->value;
-    n->value = NULL;
+    node *old = queue->head;
+    node *n = old->next;
+    void *res = n->value;
+
     queue->head = n;
+    queue->size--;
 
-    size_t prev = atomic_fetch_add_explicit(&(queue->size), -1, memory_order_relaxed);
-    if (prev == queue->capacity)
-    {
-        must_wake_enqueuers = true;
-    }
-    pthread_mutex_unlock(&(queue->deq_lock));
-    free(old_head);
-    if (must_wake_enqueuers)
-    {
-        pthread_mutex_lock(&(queue->enq_lock));
-        pthread_cond_broadcast(&(queue->not_full_cond));
-        pthread_mutex_unlock(&(queue->enq_lock));
-    };
-    return result;
+    pthread_mutex_unlock(&queue->lock);
+    free(old);
+
+    pthread_mutex_lock(&queue->lock);
+    pthread_cond_signal(&queue->not_full_cond);
+    pthread_mutex_unlock(&queue->lock);
+
+    return res;
 }
 
 b_queue *bq_init(size_t capacity)
@@ -104,15 +83,7 @@ b_queue *bq_init(size_t capacity)
 
     atomic_init(&(queue->size), 0);
 
-    int init_result = pthread_mutex_init(&(queue->enq_lock), NULL);
-    if (init_result != 0)
-    {
-        free(queue);
-        free(sentinel);
-        error("Error: mutex initialization failed\n");
-        return NULL;
-    };
-    init_result = pthread_mutex_init(&(queue->deq_lock), NULL);
+    int init_result = pthread_mutex_init(&(queue->lock), NULL);
     if (init_result != 0)
     {
         free(queue);
@@ -150,8 +121,7 @@ void bq_destroy(b_queue *queue)
     free(queue->head);
     pthread_cond_destroy(&(queue->not_empty_cond));
     pthread_cond_destroy(&(queue->not_full_cond));
-    pthread_mutex_destroy(&(queue->deq_lock));
-    pthread_mutex_destroy(&(queue->enq_lock));
+    pthread_mutex_destroy(&(queue->lock));
     free(queue);
 }
 
