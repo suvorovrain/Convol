@@ -141,8 +141,7 @@ char *add_suffix(const char *image_name)
         error("ERROR: malloc failed");
         return NULL;
     }
-    memcpy(result, image_name, base_len);
-    strcpy(result + base_len, suffix);
-    strcpy(result + base_len + strlen(suffix), ext);
+    snprintf(result, new_len + 1, "%.*s%s%s", (int)base_len, image_name, suffix, ext);
+
     return result;
 }
