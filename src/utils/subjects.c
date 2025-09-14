@@ -107,7 +107,7 @@ void *write(void *param)
         // save picture
         char *result_path = path_join(dest_folder, add_suffix(path_trim(out_task->image_name)));
         int res = save_image(result_path, out_task->result_image);
-        if (!res)
+        if (res)
         {
             break;
         }

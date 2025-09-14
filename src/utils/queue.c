@@ -97,6 +97,7 @@ b_queue *bq_init(size_t capacity)
     {
         free(queue);
         free(sentinel);
+        pthread_mutex_destroy(&(queue->lock));
         error("Error: condition variable initialization failed\n");
         return NULL;
     };
@@ -105,6 +106,8 @@ b_queue *bq_init(size_t capacity)
     {
         free(queue);
         free(sentinel);
+        pthread_mutex_destroy(&(queue->lock));
+        pthread_cond_destroy(&(queue->not_empty_cond));
         error("Error: condition variable initialization failed\n");
         return NULL;
     };
