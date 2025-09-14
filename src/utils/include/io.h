@@ -14,7 +14,6 @@ typedef struct
 
 image_data *load_image(char *path);
 int save_image(const char *dest, image_data *image);
-int list_dir_entries(const char *dirpath, char ***out, size_t *count);
 char *path_trim(const char *path);
 char *path_join(const char *dir, const char *file);
 char *add_suffix(const char *image_name);

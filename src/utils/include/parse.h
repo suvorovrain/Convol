@@ -4,13 +4,22 @@
 #define PARSE_H
 
 #define error(...) (fprintf(stderr, __VA_ARGS__))
-#define SETTINGS_NUMBER 6
+#define SETTINGS_NUMBER 5
+
+//-------------------------------------------------------------------------------
+// defines the effect that will be applied to image
+//-------------------------------------------------------------------------------
+
 enum effect {
     BLUR = 1,
     MOTION_BLUR = 2,
     FIND_EDGES = 3,
     EMBOSS = 4,
 };
+
+//-------------------------------------------------------------------------------
+// defines the type of processing of an array of images
+//-------------------------------------------------------------------------------
 
 enum type
 {
@@ -29,13 +38,16 @@ enum strength
     BIG = 3,
 };
 
+//-------------------------------------------------------------------------------
+// defines the algorithm
+//-------------------------------------------------------------------------------
+
 enum algorithm_type
 {
     LINEAR = 1,
     PARALLEL_PIXEL = 2,
     PARALLEL_ROW = 3,
     PARALLEL_COLUMN = 4,
-    STREAM = 5,
 };
 
 typedef struct

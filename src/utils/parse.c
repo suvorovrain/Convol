@@ -10,7 +10,7 @@
 
 #define USAGE_MSG                                                                                  \
     "Usage: ./convol <src_image> <blur/motion_blur/find_edges/emboss> <1/2/3> <dest> "             \
-    "<linear/parallel_pixel/parallel_row/parallel_column/stream> <queue/classic>\n"
+    "<linear/parallel_pixel/parallel_row/parallel_column> <queue/classic?> \n"
 
 enum effect parse_effect(const char *str)
 {
@@ -57,11 +57,6 @@ enum algorithm_type parse_algorithm_type(const char *str)
     if (strcmp(str, "parallel_column") == 0)
     {
         return PARALLEL_PIXEL;
-    }
-
-    if (strcmp(str, "stream") == 0)
-    {
-        return STREAM;
     }
 
     return -1;
@@ -166,7 +161,7 @@ input_data *validate_input(int argc, char **argv)
     {
         error(USAGE_MSG);
         return NULL;
-    };
+    }
     input->effect_type = effect;
 
     int strength = parse_effect_strength(*(++argv));
@@ -183,13 +178,23 @@ input_data *validate_input(int argc, char **argv)
         error(USAGE_MSG);
         return NULL;
     };
+    int type;
     input->algorithm = algorithm;
-    int type = parse_type(*(++argv));
-    if (type == -1)
+    argv++;
+    if (*argv == NULL)
     {
-        error(USAGE_MSG);
-        return NULL;
+        type = CLASSIC;
     }
+    else
+    {
+        type = parse_type(*argv);
+        if (type == -1)
+        {
+            error(USAGE_MSG);
+            return NULL;
+        }
+    }
+
     input->type = type;
     return input;
 }

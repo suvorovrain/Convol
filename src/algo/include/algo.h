@@ -13,6 +13,7 @@
 #define OUT_QUEUE_SIZE 2 * WORKERS_NUMBER
 
 #define error(...) (fprintf(stderr, __VA_ARGS__))
+
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 #define MAX(a,b) ((a) > (b) ? (a) : (b))
 #define RED 0
@@ -21,10 +22,10 @@
 
 image_data *create_canvas(image_data *image);
 
+typedef image_data *(*convolution_func)(image_data *, convolution_filter *);
+
 image_data *convolution(image_data *image, convolution_filter *filter, int type);
-int single_convolution(input_data *input, convolution_filter *filter);
-int stream_convolution(input_data *input, convolution_filter *filter);
-
-
+int classic_convolution(input_data *input, convolution_filter *filter);
+int queue_convolution(input_data *input, convolution_filter *filter);
 
 #endif // ALGO_H

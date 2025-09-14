@@ -55,6 +55,7 @@ void *produce(void *param)
     pr_params_t *pr_params = (pr_params_t *)param;
     b_queue *queue_in = pr_params->queue_in;
     b_queue *queue_out = pr_params->queue_out;
+    convolution_func convolution = pr_params->convolution;
     convolution_filter *filter = pr_params->filter;
     for (;;)
     {
@@ -65,7 +66,7 @@ void *produce(void *param)
             break;
         }
         // convolution
-        image_data *result_image = linear_convolution(in_task->src_image, filter);
+        image_data *result_image = convolution(in_task->src_image, filter);
 
         // create task
         out_task *out_task = create_out_task(in_task->id, result_image, in_task->image_name);

@@ -10,7 +10,7 @@
 
 //----------------------------------------------------------------------------------------------
 // Usage: ./convol <src_image> <blur/motion_blur/find_edges/emboss> <1/2/3> <dest>
-// <linear/parallel_pixel/parallel_row/parallel_column/stream> <queue/classic>
+// <linear/parallel_pixel/parallel_row/parallel_column/stream> <queue/classic?>
 //----------------------------------------------------------------------------------------------
 
 int main(int argc, char **argv)
@@ -32,21 +32,22 @@ int main(int argc, char **argv)
     if (input->type == QUEUE)
     {
         double t0 = omp_get_wtime();
-        res = stream_convolution(input, filter);
+        res = queue_convolution(input, filter);
         double t1 = omp_get_wtime();
         printf("Elapsed time: %f seconds\n", t1 - t0);
     }
     else
     {
         double t0 = omp_get_wtime();
-        res = single_convolution(input, filter);
+        res = classic_convolution(input, filter);
         double t1 = omp_get_wtime();
         printf("Elapsed time: %f seconds\n", t1 - t0);
     }
-    if (!res)
+    if (res)
     {
         return -1;
     }
 
+    printf("Images have been saved into %s\n", input->folder_for_store);
     return 0;
 }

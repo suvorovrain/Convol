@@ -12,21 +12,18 @@
 #include "include/linear_convolution.h"
 #include "include/parallel_convolution.h"
 
-image_data *convolution(image_data *image, convolution_filter *filter, int type)
+convolution_func get_convolution(int type)
 {
     switch (type)
     {
     case LINEAR:
-        return linear_convolution(image, filter);
+        return linear_convolution;
     case PARALLEL_PIXEL:
-        return parallel_pixel_convolution(image, filter);
+        return parallel_pixel_convolution;
     case PARALLEL_ROW:
-        return parallel_row_convolution(image, filter);
+        return parallel_row_convolution;
     case PARALLEL_COLUMN:
-        return parallel_column_convolution(image, filter);
-    case STREAM:
-        error("TODO: implement split algorithm\n");
-        return NULL;
+        return parallel_column_convolution;
     default:
         error("ERROR: unsupported algorithm type\n");
         return NULL;
@@ -57,7 +54,7 @@ image_data *create_canvas(image_data *image)
     return out;
 }
 
-int stream_convolution(input_data *input, convolution_filter *filter)
+int queue_convolution(input_data *input, convolution_filter *filter)
 {
     // init queues
     b_queue *in_queue = bq_init(IN_QUEUE_SIZE);
@@ -90,11 +87,18 @@ int stream_convolution(input_data *input, convolution_filter *filter)
     pthread_t producers[WORKERS_NUMBER];
     pr_params_t pr_params[WORKERS_NUMBER];
 
+    convolution_func func = get_convolution(input->algorithm);
+    if (!func)
+    {
+        return -1;
+    }
+
     for (int i = 0; i < WORKERS_NUMBER; i++)
     {
         pr_params[i].filter = filter;
         pr_params[i].queue_in = in_queue;
         pr_params[i].queue_out = out_queue;
+        pr_params[i].convolution = func;
         pthread_create(producers + i, NULL, produce, pr_params);
     }
     // init consumers
@@ -137,7 +141,7 @@ int stream_convolution(input_data *input, convolution_filter *filter)
     return 0;
 }
 
-int single_convolution(input_data *input, convolution_filter *filter)
+int classic_convolution(input_data *input, convolution_filter *filter)
 {
     char **src_images = input->src_images;
     for (size_t i = 0; i < input->images_number; i++)
@@ -150,7 +154,13 @@ int single_convolution(input_data *input, convolution_filter *filter)
         }
 
         // convolution
-        image_data *result_image = convolution(src_image, filter, input->algorithm);
+        convolution_func func = get_convolution(input->algorithm);
+        if (!func)
+        {
+            return -1;
+        }
+
+        image_data *result_image = func(src_image, filter);
         if (!result_image)
         {
             return -1;

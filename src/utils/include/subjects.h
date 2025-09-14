@@ -1,6 +1,7 @@
 #include "queue.h"
 #include <stdatomic.h>
 #include "../../filters/filters.h"
+#include "../../algo/include/algo.h"
 
 #ifndef SUBJECTS_H
 #define SUBJECTS_H
@@ -18,10 +19,10 @@ typedef struct reader_parameters
 
 typedef struct producer_parameters
 {
+    convolution_func convolution;
     b_queue *queue_in;
     b_queue *queue_out;
     convolution_filter *filter;
-
 } pr_params_t;
 
 typedef struct consumer_parameters
