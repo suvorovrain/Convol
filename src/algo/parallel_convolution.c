@@ -11,7 +11,6 @@ image_data *parallel_pixel_convolution(image_data *image, convolution_filter *fi
     image_data *new_image = create_canvas(image);
     if (!new_image)
     {
-        free(new_image);
         error("ERROR: new canvas creation failed\n");
         return NULL;
     };
@@ -83,7 +82,6 @@ image_data *parallel_row_convolution(image_data *image, convolution_filter *filt
     image_data *new_image = create_canvas(image);
     if (!new_image)
     {
-        free(new_image);
         error("ERROR: new canvas creation failed\n");
         return NULL;
     };
@@ -153,7 +151,6 @@ image_data *parallel_column_convolution(image_data *image, convolution_filter *f
     image_data *new_image = create_canvas(image);
     if (!new_image)
     {
-        free(new_image);
         error("ERROR: new canvas creation failed\n");
         return NULL;
     };
