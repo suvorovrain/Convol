@@ -17,10 +17,10 @@ $(TARGET): $(SRC)
 clean:
 	rm -rf build
 
-format:
+fmt:
 	clang-format -i $(SRC) $(HDR)
 
-format-check:
+fmt-check:
 	clang-format --dry-run --Werror $(SRC) $(HDR)
 
 lint:

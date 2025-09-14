@@ -40,10 +40,11 @@ void *read(void *param)
         {
             break;
         }
-        
+
         // put in_task
         int res = bq_enqueue(queue_in, task);
-        if (res){
+        if (res)
+        {
             break;
         }
     }
@@ -70,13 +71,15 @@ void *work(void *param)
 
         // convolution
         image_data *result_image = convolution(in_task->src_image, filter);
-        if (!result_image){
+        if (!result_image)
+        {
             break;
         }
 
         // create out_task
         out_task *out_task = create_out_task(in_task->id, result_image, in_task->image_name);
-        if (!out_task){
+        if (!out_task)
+        {
             break;
         }
 
