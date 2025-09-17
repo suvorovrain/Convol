@@ -10,7 +10,7 @@
 
 #define USAGE_MSG                                                                                  \
     "Usage: ./convol <src_image> <blur/motion_blur/find_edges/emboss> <1/2/3> <dest> "             \
-    "<linear/parallel_pixel/parallel_row/parallel_column> <queue/classic?> \n"
+    "<linear/parallel_pixel/parallel_row/parallel_column> <queue/classic> (default: classic) \n"
 
 enum effect parse_effect(const char *str)
 {
@@ -128,7 +128,14 @@ char **parse_source_images(char ***argv, int *count)
             }
             files = tmp;
         }
-        files[n++] = **argv;
+        char *dup = strdup(**argv);
+        if (!dup)
+        {
+            free(files);
+            error("ERROR: strdup failed");
+            return NULL;
+        }
+        files[n++] = dup;
         (*argv)++;
     }
 
@@ -178,7 +185,12 @@ input_data *validate_input(int argc, char **argv)
     }
     input->effect_strength = strength;
 
-    input->folder_for_store = *(++argv);
+    input->folder_for_store = strdup(*(++argv));
+    if (!input->folder_for_store)
+    {
+        error("ERROR: strdup failed\n");
+        return NULL;
+    }
 
     int algorithm = parse_algorithm_type(*(++argv));
     if (algorithm == -1)
@@ -206,4 +218,23 @@ input_data *validate_input(int argc, char **argv)
     input->type = type;
 
     return input;
+}
+
+void free_input_data(input_data *input)
+{
+    if (!input)
+    {
+        return;
+    }
+
+    if (input->src_images)
+    {
+        for (size_t i = 0; i < input->images_number; i++)
+        {
+            free(input->src_images[i]);
+        }
+        free(input->src_images);
+    }
+    free(input->folder_for_store);
+    free(input);
 }

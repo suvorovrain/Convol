@@ -10,7 +10,7 @@
 
 //----------------------------------------------------------------------------------------------
 // Usage: ./convol <src_image> <blur/motion_blur/find_edges/emboss> <1/2/3> <dest>
-// <linear/parallel_pixel/parallel_row/parallel_column/stream> <queue/classic?>
+// <linear/parallel_pixel/parallel_row/parallel_column/stream> <queue/classic> (default: classic)
 //----------------------------------------------------------------------------------------------
 
 int main(int argc, char **argv)
@@ -45,9 +45,13 @@ int main(int argc, char **argv)
     }
     if (res)
     {
+        free_convolution_filter(filter);
+        free_input_data(input);
         return -1;
     }
 
     printf("Images have been saved into %s\n", input->folder_for_store);
+    free_convolution_filter(filter);
+    free_input_data(input);
     return 0;
 }

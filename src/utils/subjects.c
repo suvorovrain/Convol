@@ -38,6 +38,7 @@ void *read(void *param)
         in_task *task = create_in_task(task_id, src_image, filename);
         if (!task)
         {
+            free_image(src_image);
             break;
         }
 
@@ -45,6 +46,7 @@ void *read(void *param)
         int res = bq_enqueue(queue_in, task);
         if (res)
         {
+            free_in_task(task);
             break;
         }
     }
@@ -66,6 +68,7 @@ void *work(void *param)
         in_task *in_task = bq_dequeue(queue_in);
         if (in_task->id == -1)
         {
+            free_in_task(in_task);
             break;
         }
 
@@ -73,11 +76,13 @@ void *work(void *param)
         image_data *result_image = convolution(in_task->src_image, filter);
         if (!result_image)
         {
+            free_in_task(in_task);
             break;
         }
 
         // create out_task
         out_task *out_task = create_out_task(in_task->id, result_image, in_task->image_name);
+        free_in_task(in_task);
         if (!out_task)
         {
             break;
@@ -101,16 +106,28 @@ void *write(void *param)
         out_task *out_task = bq_dequeue(queue_out);
         if (out_task->id == -1)
         {
+            free_out_task(out_task);
             break;
         }
 
         // save picture
-        char *result_path = path_join(dest_folder, add_suffix(path_trim(out_task->image_name)));
+        char *trimmed = path_trim(out_task->image_name);
+        char *with_suf = add_suffix(trimmed);
+        char *result_path = path_join(dest_folder, with_suf);
+
         int res = save_image(result_path, out_task->result_image);
         if (res)
         {
+            free(result_path);
+            free(with_suf);
+            free(trimmed);
+            free_out_task(out_task);
             break;
         }
+        free(result_path);
+        free(with_suf);
+        free(trimmed);
+        free_out_task(out_task);
     }
     return NULL;
 }

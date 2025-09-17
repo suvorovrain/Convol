@@ -4,6 +4,7 @@
 #include <stdatomic.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 int bq_enqueue(b_queue *queue, void *item)
 {
@@ -58,59 +59,53 @@ void *bq_dequeue(b_queue *queue)
 
 b_queue *bq_init(size_t capacity)
 {
-    if (capacity == 0)
-    {
-        return NULL;
-    }
-
-    b_queue *queue = calloc(1, sizeof(*queue));
+    b_queue *queue = calloc(1, sizeof *queue);
     if (!queue)
     {
         error("Error: malloc failed\n");
         return NULL;
-    };
+    }
 
-    node *sentinel = malloc(sizeof(*sentinel));
+    node *sentinel = malloc(sizeof *sentinel);
     if (!sentinel)
     {
         error("Error: malloc failed\n");
         free(queue);
         return NULL;
-    };
+    }
     sentinel->value = NULL;
     sentinel->next = NULL;
     queue->head = queue->tail = sentinel;
-
     atomic_init(&(queue->size), 0);
 
-    int init_result = pthread_mutex_init(&(queue->lock), NULL);
-    if (init_result != 0)
+    int rc = pthread_mutex_init(&(queue->lock), NULL);
+    if (rc)
     {
-        free(queue);
+        error("Error: mutex init failed\n");
         free(sentinel);
-        error("Error: mutex initialization failed\n");
+        free(queue);
         return NULL;
-    };
-
-    init_result = pthread_cond_init(&(queue->not_empty_cond), NULL);
-    if (init_result != 0)
+    }
+    rc = pthread_cond_init(&(queue->not_empty_cond), NULL);
+    if (rc)
     {
-        free(queue);
-        free(sentinel);
+        error("Error: cond init failed\n");
         pthread_mutex_destroy(&(queue->lock));
-        error("Error: condition variable initialization failed\n");
+        free(sentinel);
+        free(queue);
         return NULL;
-    };
-    init_result = pthread_cond_init(&(queue->not_full_cond), NULL);
-    if (init_result != 0)
+    }
+    rc = pthread_cond_init(&(queue->not_full_cond), NULL);
+    if (rc)
     {
-        free(queue);
-        free(sentinel);
-        pthread_mutex_destroy(&(queue->lock));
+        error("Error: cond init failed\n");
         pthread_cond_destroy(&(queue->not_empty_cond));
-        error("Error: condition variable initialization failed\n");
+        pthread_mutex_destroy(&(queue->lock));
+        free(sentinel);
+        free(queue);
         return NULL;
-    };
+    }
+
     queue->capacity = capacity;
     return queue;
 }
@@ -120,8 +115,16 @@ void bq_destroy(b_queue *queue)
     if (!queue)
     {
         return;
-    };
-    free(queue->head);
+    }
+
+    node *n = queue->head;
+    while (n)
+    {
+        node *next = n->next;
+        free(n);
+        n = next;
+    }
+
     pthread_cond_destroy(&(queue->not_empty_cond));
     pthread_cond_destroy(&(queue->not_full_cond));
     pthread_mutex_destroy(&(queue->lock));
@@ -144,14 +147,54 @@ in_task *create_in_task(int id, image_data *image, char *filename)
 
 out_task *create_out_task(int id, image_data *image, char *filename)
 {
-    out_task *task = malloc(sizeof(*task));
+    out_task *task = malloc(sizeof *task);
     if (!task)
     {
         error("ERROR: malloc failed");
         return NULL;
     }
+
     task->id = id;
     task->result_image = image;
-    task->image_name = filename;
+    task->image_name = filename ? strdup(filename) : NULL;
+    if (filename && !task->image_name)
+    {
+        free(task);
+        return NULL;
+    }
+
     return task;
+}
+
+void free_in_task(in_task *task)
+{
+    if (!task)
+    {
+        return;
+    }
+
+    if (task->src_image)
+    {
+        free_image(task->src_image);
+        task->src_image = NULL;
+    }
+    task->image_name = NULL;
+    free(task);
+}
+
+void free_out_task(out_task *task)
+{
+    if (!task)
+    {
+        return;
+    }
+
+    if (task->result_image)
+    {
+        free_image(task->result_image);
+        task->result_image = NULL;
+    }
+    free(task->image_name);
+    task->image_name = NULL;
+    free(task);
 }

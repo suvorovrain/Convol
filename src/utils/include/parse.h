@@ -10,7 +10,8 @@
 // defines the effect that will be applied to image
 //-------------------------------------------------------------------------------
 
-enum effect {
+enum effect
+{
     BLUR = 1,
     MOTION_BLUR = 2,
     FIND_EDGES = 3,
@@ -61,5 +62,6 @@ typedef struct
     enum type type;
 } input_data;
 
-input_data *validate_input(int argc, char **argv);
+void free_input_data(input_data *input);
+input_data *validate_input(int argc,  char **argv);
 #endif // PARCE_H

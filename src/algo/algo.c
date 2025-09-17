@@ -134,8 +134,9 @@ int queue_convolution(input_data *input, convolution_filter *filter)
     for (int i = 0; i < WRITERS_NUMBER; i++)
     {
         pthread_join(writers[i], NULL);
-    }
-    free(src_images);
+    };
+    bq_destroy(in_queue);
+    bq_destroy(out_queue);
 
     return 0;
 }
@@ -149,6 +150,7 @@ int classic_convolution(input_data *input, convolution_filter *filter)
         image_data *src_image = load_image(src_images[i]);
         if (!src_image)
         {
+            free_image(src_image);
             return -1;
         }
 
@@ -156,23 +158,39 @@ int classic_convolution(input_data *input, convolution_filter *filter)
         convolution_func func = get_convolution(input->algorithm);
         if (!func)
         {
+            free_image(src_image);
             return -1;
         }
 
         image_data *result_image = func(src_image, filter);
         if (!result_image)
         {
+            free_image(result_image);
+            free_image(src_image);
             return -1;
         }
 
         // save file
-        char *dest_dir = path_join(input->folder_for_store, add_suffix(path_trim(src_images[i])));
+        char *trimmed = path_trim(src_images[i]);
+        char *with_suf = add_suffix(trimmed);
+        char *dest_path = path_join(input->folder_for_store, with_suf);
 
-        int res = save_image(dest_dir, result_image);
+        int res = save_image(dest_path, result_image);
+
         if (res)
         {
+            free(dest_path);
+            free(with_suf);
+            free(trimmed);
+            free_image(result_image);
+            free_image(src_image);
             return -1;
         }
+        free(dest_path);
+        free(with_suf);
+        free(trimmed);
+        free_image(result_image);
+        free_image(src_image);
     }
     return 0;
 }

@@ -65,7 +65,6 @@ image_data *load_image(char *path)
     return image_data;
 }
 
-// TODO: free
 char *path_trim(const char *path)
 {
     if (!path)
@@ -144,4 +143,14 @@ char *add_suffix(const char *image_name)
     snprintf(result, new_len + 1, "%.*s%s%s", (int)base_len, image_name, suffix, ext);
 
     return result;
+}
+
+void free_image(image_data *image_data)
+{
+    if (!image_data)
+    {
+        return;
+    }
+    free(image_data->image);
+    free(image_data);
 }
