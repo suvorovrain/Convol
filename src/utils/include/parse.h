@@ -63,5 +63,10 @@ typedef struct
 } input_data;
 
 void free_input_data(input_data *input);
-input_data *validate_input(int argc,  char **argv);
+input_data *validate_input(int argc, char **argv);
+enum effect parse_effect(const char *str);
+enum algorithm_type parse_algorithm_type(const char *str);
+enum strength parse_effect_strength(const char *str);
+enum type parse_type(const char *type);
+int has_suffix(const char *str, const char *suffix);
 #endif // PARCE_H

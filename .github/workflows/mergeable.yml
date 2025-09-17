@@ -36,3 +36,14 @@ jobs:
 
       - name: Check formatting
         run: make fmt-check
+
+  make:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install cmocka
+        run: sudo apt-get update && sudo apt-get install -y clang-format && sudo apt-get install -y libcmocka-dev
+
+      - name: Run tests
+        run: make test

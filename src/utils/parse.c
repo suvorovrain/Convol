@@ -51,12 +51,12 @@ enum algorithm_type parse_algorithm_type(const char *str)
 
     if (strcmp(str, "parallel_row") == 0)
     {
-        return PARALLEL_PIXEL;
+        return PARALLEL_ROW;
     }
 
     if (strcmp(str, "parallel_column") == 0)
     {
-        return PARALLEL_PIXEL;
+        return PARALLEL_COLUMN;
     }
 
     return -1;
