@@ -7,7 +7,7 @@ APP_SRC := $(SRC) src/main.c
 HDR := $(shell find src -name '*.h')
 TARGET  := build/convol
 
-TEST_SRC := $(shell find tests/unit -name '*.c')
+TEST_SRC := $(shell find tests -name '*.c')
 TEST_BIN := build/tests
 
 .PHONY: build clean fmt fmt-check lint test

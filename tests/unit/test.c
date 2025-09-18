@@ -1,9 +1,6 @@
+#include "../convolution/convolution.h"
+#include "unit.h"
 #include <stdlib.h>
-
-int io_tests(void);
-int parse_tests(void);
-int queue_tests(void);
-int subjects_tests(void);
 
 int main(void)
 {
@@ -12,5 +9,8 @@ int main(void)
     res += parse_tests();
     res += queue_tests();
     res += subjects_tests();
+    res += linear_convolution_tests();
+    res += parallel_convolution_tests();
+    res += queue_convolution_tests();
     return res;
 }
