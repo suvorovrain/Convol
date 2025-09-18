@@ -27,8 +27,8 @@ image_data *parallel_pixel_convolution(image_data *image, convolution_filter *fi
     double bias = filter->bias;
     double red = 0.0, green = 0.0, blue = 0.0;
     int x, y, fx, fy, ix, iy, idx;
-#pragma omp parallel for collapse(2)                                                               \
-    schedule(static) private(x, y, fx, fy, ix, iy, idx, red, green, blue)
+#pragma omp parallel for collapse(2) schedule(static)                                              \
+    private(x, y, fx, fy, ix, iy, idx, red, green, blue)
     for (x = 0; x < width; x++)
     {
         for (y = 0; y < height; y++)
@@ -63,15 +63,13 @@ image_data *parallel_pixel_convolution(image_data *image, convolution_filter *fi
                     green += image_src[idx + GREEN] * filter_mat[fy][fx];
                     blue += image_src[idx + BLUE] * filter_mat[fy][fx];
                 }
-                idx = (y * width + x) * components;
-
-                result_image[idx + RED] =
-                    (unsigned char)MIN(MAX((int)(factor * red + bias), 0), 255);
-                result_image[idx + GREEN] =
-                    (unsigned char)MIN(MAX((int)(factor * green + bias), 0), 255);
-                result_image[idx + BLUE] =
-                    (unsigned char)MIN(MAX((int)(factor * blue + bias), 0), 255);
             }
+            idx = (y * width + x) * components;
+
+            result_image[idx + RED] = (unsigned char)MIN(MAX((int)(factor * red + bias), 0), 255);
+            result_image[idx + GREEN] =
+                (unsigned char)MIN(MAX((int)(factor * green + bias), 0), 255);
+            result_image[idx + BLUE] = (unsigned char)MIN(MAX((int)(factor * blue + bias), 0), 255);
         }
     }
     return new_image;
@@ -132,15 +130,13 @@ image_data *parallel_row_convolution(image_data *image, convolution_filter *filt
                     green += image_src[idx + GREEN] * filter_mat[fy][fx];
                     blue += image_src[idx + BLUE] * filter_mat[fy][fx];
                 }
-                idx = (y * width + x) * components;
-
-                result_image[idx + RED] =
-                    (unsigned char)MIN(MAX((int)(factor * red + bias), 0), 255);
-                result_image[idx + GREEN] =
-                    (unsigned char)MIN(MAX((int)(factor * green + bias), 0), 255);
-                result_image[idx + BLUE] =
-                    (unsigned char)MIN(MAX((int)(factor * blue + bias), 0), 255);
             }
+            idx = (y * width + x) * components;
+
+            result_image[idx + RED] = (unsigned char)MIN(MAX((int)(factor * red + bias), 0), 255);
+            result_image[idx + GREEN] =
+                (unsigned char)MIN(MAX((int)(factor * green + bias), 0), 255);
+            result_image[idx + BLUE] = (unsigned char)MIN(MAX((int)(factor * blue + bias), 0), 255);
         }
     }
     return new_image;
@@ -201,15 +197,13 @@ image_data *parallel_column_convolution(image_data *image, convolution_filter *f
                     green += image_src[idx + GREEN] * filter_mat[fy][fx];
                     blue += image_src[idx + BLUE] * filter_mat[fy][fx];
                 }
-                idx = (y * width + x) * components;
-
-                result_image[idx + RED] =
-                    (unsigned char)MIN(MAX((int)(factor * red + bias), 0), 255);
-                result_image[idx + GREEN] =
-                    (unsigned char)MIN(MAX((int)(factor * green + bias), 0), 255);
-                result_image[idx + BLUE] =
-                    (unsigned char)MIN(MAX((int)(factor * blue + bias), 0), 255);
             }
+            idx = (y * width + x) * components;
+
+            result_image[idx + RED] = (unsigned char)MIN(MAX((int)(factor * red + bias), 0), 255);
+            result_image[idx + GREEN] =
+                (unsigned char)MIN(MAX((int)(factor * green + bias), 0), 255);
+            result_image[idx + BLUE] = (unsigned char)MIN(MAX((int)(factor * blue + bias), 0), 255);
         }
     }
     return new_image;
