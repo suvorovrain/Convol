@@ -33,7 +33,7 @@ enum effect parse_effect(const char *str)
     {
         return EMBOSS;
     }
-
+    error("ERROR: invalid filter name\n");
     return -1;
 }
 
@@ -58,7 +58,7 @@ enum algorithm_type parse_algorithm_type(const char *str)
     {
         return PARALLEL_COLUMN;
     }
-
+    error("ERROR: invalid algorithm type\n");
     return -1;
 }
 
@@ -78,7 +78,7 @@ enum strength parse_effect_strength(const char *str)
     {
         return BIG;
     }
-
+    error("ERROR: invalid strength\n");
     return -1;
 }
 
@@ -93,6 +93,7 @@ enum type parse_type(const char *type)
     {
         return QUEUE;
     }
+    error("ERROR: invalid type\n");
     return -1;
 }
 
