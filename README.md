@@ -1,5 +1,4 @@
-
-# Convol --- tool for BMP image filtering.
+# Convol — tool for BMP image filtering.
 
 
 ## Installation
@@ -15,27 +14,39 @@ make build
 ## Usage
 ### Single image mode
 ```
-Usage: ./convol <src_image> <effect> <strength> <dest> <algo_type>
+Usage: ./build/convol <src_image> <effect> <strength> <dest> <algo_type> <proc_type>
 ```
-*src_image:* Source `.bmp` file
+*src_image:* One or more source `.bmp` file
 
 *Effects:* Possible values: `blur`,`motion_blur`,`find_edges`,`emboss`
 
 *Strength of effect:* Possible values: `1`,`2`,`3`
 
+*Destination:* Path to save result images
+
 *Algorithm type:* Possible values: `linear`,`parallel_pixel`,`parallel_row`,`parallel_column`
 
-*dest:* New `.bmp` file
-### Multiple image mode
+*Processing type:* Type of approach array of images processing. Possible values: `classic`, `queue` (default: `classic`)
+
+**Examples:**
 ```
-Usage: ./convol <src_dir> <effect> <strength> <dest_dir> <algo_type>
+# simple usage
+./build/convol image-examples/hmk.bmp find_edges 3 image-results/ parallel_pixel
+
+# few images using *
+./build/convol image-examples/*.bmp find_edges 3 image-results/ linear classic
+
+# few images using space as a delimiter
+./build/convol image-examples/hmk.bmp image-examples/silly.bmp emboss 1 image-results/ parallel_row queue
+
+# you can skip <proc_type> argument
 ```
-*src_dir:* Folder that contains at least one `.bmp` file
 
-*Effects:* `blur`,`motion_blur`,`find_edges`,`emboss`
 
-*Strength of effect:* `1`,`2`,`3`
+## Tests
 
-*Algorithm type:* `stream`
-
-*dest_dir:* Folder that will store result `.bmp` files
+For running tests do:
+```
+make test
+```
+## Benchmarks
