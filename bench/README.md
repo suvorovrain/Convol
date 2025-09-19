@@ -1,8 +1,13 @@
 # Benchmark Results
 **System parameters**:
 - Kubuntu 24.04.2 
-- 12th Gen Intel i7-12700H
+- 12th Gen Intel i7-12700H 20cpus
 - 16GB RAM
+
+**Queue parameters**:
+- Nubmer of readers: 5
+- Number of workers: 10
+- Number of writers: 5
 
 ## Single image convolution
 
@@ -33,7 +38,7 @@ We can make following conclusions:
 
 - Using a queue for processing a single image is slower due to the overhead
 
-- Parallel processing enables a significant speedup of image convolution (up to 3×)
+- Parallel processing enables a significant speedup of image convolution (up to 3x)
 
 ---
 
