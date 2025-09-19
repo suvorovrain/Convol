@@ -6,13 +6,13 @@
 **Convol** have 4 different filters with the ability to adjust the strength of the effect.
 
 - Emboss
-[emboss filter](./image-examples/readme_src/silly_combined_correct.jpg)
+![emboss filter](./image-examples/readme_src/silly_combined_correct.jpg)
 - Blur
-[blur filter](./image-examples/readme_src/shelbiks_combined.jpg)
+![blur filter](./image-examples/readme_src/shelbiks_combined.jpg)
 - Motion Blur
-[mblur filter](./image-examples/readme_src/tate_combined.jpg)
+![mblur filter](./image-examples/readme_src/tate_combined.jpg)
 - Find edges
-[findedges filter](./image-examples/readme_src/combined_horizontal.jpg)
+![findedges filter](./image-examples/readme_src/combined_horizontal.jpg)
 
 ## Installation
 
