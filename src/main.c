@@ -10,7 +10,7 @@
 
 //----------------------------------------------------------------------------------------------
 // Usage: ./convol <src_image> <blur/motion_blur/find_edges/emboss> <1/2/3> <dest>
-// <linear/parallel_pixel/parallel_row/parallel_column/stream> <queue/classic> (default: classic)
+// <linear/parallel_pixel/parallel_row/parallel_column> <queue/classic> (default: classic)
 //----------------------------------------------------------------------------------------------
 
 int main(int argc, char **argv)
@@ -34,14 +34,14 @@ int main(int argc, char **argv)
         double t0 = omp_get_wtime();
         res = queue_convolution(input, filter);
         double t1 = omp_get_wtime();
-        printf("Elapsed time: %f seconds\n", t1 - t0);
+        printf("elapsed_time:%f\n", t1 - t0);
     }
     else
     {
         double t0 = omp_get_wtime();
         res = classic_convolution(input, filter);
         double t1 = omp_get_wtime();
-        printf("Elapsed time: %f seconds\n", t1 - t0);
+        printf("elapsed_time:%f\n", t1 - t0);
     }
     if (res)
     {

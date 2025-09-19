@@ -111,7 +111,7 @@ char **parse_source_images(char ***argv, int *count)
     char **files = malloc(capacity * sizeof(char *));
     if (!files)
     {
-        error("ERROR: malloc failed");
+        error("ERROR: malloc failed\n");
         return NULL;
     }
 
@@ -124,7 +124,7 @@ char **parse_source_images(char ***argv, int *count)
             if (!tmp)
             {
                 free(files);
-                error("ERROR: realloc failed");
+                error("ERROR: realloc failed\n");
                 return NULL;
             }
             files = tmp;
@@ -133,7 +133,7 @@ char **parse_source_images(char ***argv, int *count)
         if (!dup)
         {
             free(files);
-            error("ERROR: strdup failed");
+            error("ERROR: strdup failed\n");
             return NULL;
         }
         files[n++] = dup;

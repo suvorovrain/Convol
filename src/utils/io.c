@@ -48,7 +48,7 @@ image_data *load_image(char *path)
     unsigned char *image = stbi_load(path, &x, &y, &n, 0);
     if (!image)
     {
-        error("ERROR: image read failed");
+        error("ERROR: image read failed\n");
         return NULL;
     };
     image_data *image_data = malloc(sizeof(*image_data));
@@ -111,7 +111,7 @@ char *path_join(const char *dir, const char *file)
     char *out = (char *)malloc(total + 1);
     if (!out)
     {
-        error("ERROR: malloc failed");
+        error("ERROR: malloc failed\n");
         return NULL;
     }
 
@@ -137,7 +137,7 @@ char *add_suffix(const char *image_name)
     char *result = malloc(new_len + 1);
     if (!result)
     {
-        error("ERROR: malloc failed");
+        error("ERROR: malloc failed\n");
         return NULL;
     }
     snprintf(result, new_len + 1, "%.*s%s%s", (int)base_len, image_name, suffix, ext);

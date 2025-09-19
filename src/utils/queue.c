@@ -136,7 +136,7 @@ in_task *create_in_task(int id, image_data *image, char *filename)
     in_task *task = malloc(sizeof(*task));
     if (!task)
     {
-        error("ERROR: malloc failed");
+        error("ERROR: malloc failed\n");
         return NULL;
     }
     task->id = id;
@@ -150,7 +150,7 @@ out_task *create_out_task(int id, image_data *image, char *filename)
     out_task *task = malloc(sizeof *task);
     if (!task)
     {
-        error("ERROR: malloc failed");
+        error("ERROR: malloc failed\n");
         return NULL;
     }
 
