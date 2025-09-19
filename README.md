@@ -1,5 +1,18 @@
 # Convol — tool for BMP image filtering.
 
+**Сonvol** provides a set of different (in terms of parallelism) image convolutions algorithms.
+
+## Effects
+**Convol** have 4 different filters with the ability to adjust the strength of the effect.
+
+- Emboss
+[emboss filter](./image-examples/readme_src/silly_combined_correct.jpg)
+- Blur
+[blur filter](./image-examples/readme_src/shelbiks_combined.jpg)
+- Motion Blur
+[mblur filter](./image-examples/readme_src/tate_combined.jpg)
+- Find edges
+[findedges filter](./image-examples/readme_src/combined_horizontal.jpg)
 
 ## Installation
 
@@ -50,3 +63,4 @@ For running tests do:
 make test
 ```
 ## Benchmarks
+Benchmark results are located in a [corresponding](./bench/) folder
