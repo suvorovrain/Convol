@@ -100,22 +100,25 @@ static void test_zero_padding_filter(void **state)
         image_data *original_image =
             make_pattern_image(sizes[i].width, sizes[i].height, components_count);
 
-        image_data *result_image = linear_convolution(original_image, filter);
+        image_data *edited_image = linear_convolution(original_image, filter);
         image_data *result_image_padded = linear_convolution(original_image, &padded_emboss_filter);
 
-        assert_images_equal(result_image, result_image_padded);
+        assert_images_equal(edited_image, result_image_padded);
 
-        free_image(result_image);
+        free_image(edited_image);
         free_image(result_image_padded);
         free_image(original_image);
     }
     // real image
     image_data *original_image = load_image("image-examples/small/hmk.bmp");
-    image_data *result_image = linear_convolution(original_image, filter);
+    image_data *edited_image = linear_convolution(original_image, filter);
     image_data *result_image_padded = linear_convolution(original_image, &padded_emboss_filter);
-    assert_images_equal(result_image, result_image_padded);
+
+    assert_images_equal(edited_image, result_image_padded);
+
+    free_image(edited_image);
+    free_image(result_image_padded);
     free_image(original_image);
-    free_image(result_image);
 }
 
 static void test_shift_right_left(void **state)

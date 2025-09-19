@@ -22,7 +22,7 @@ image_data *make_pattern_image(int width, int height, int components_count)
     image->width = width;
     image->height = height;
     image->components = components_count;
-    size_t total_size = width * height * components_count;
+    int total_size = width * height * components_count;
     image->image = malloc(total_size);
 
     for (int y = 0; y < height; y++)
@@ -32,7 +32,7 @@ image_data *make_pattern_image(int width, int height, int components_count)
             for (int component = 0; component < components_count; component++)
             {
                 unsigned int value = (x * 52 + y * 42);
-                image->image[get_image_offset(image, x, y, component)] = value % 256u;
+                image->image[get_image_offset(image, x, y, component)] = value % 256;
             }
         }
     }
@@ -45,14 +45,14 @@ void assert_images_equal(const image_data *src_image, const image_data *result_i
     assert_int_equal(src_image->height, result_image->height);
     assert_int_equal(src_image->components, result_image->components);
 
-    size_t total_size = src_image->width * src_image->height * src_image->components;
+    int total_size = src_image->width * src_image->height * src_image->components;
     assert_memory_equal(src_image->image, result_image->image, total_size);
 }
 
 void assert_image_all_zero(const image_data *result_image)
 {
-    size_t total_size = result_image->width * result_image->height * result_image->components;
-    for (size_t index = 0; index < total_size; index++)
+    int total_size = result_image->width * result_image->height * result_image->components;
+    for (int index = 0; index < total_size; index++)
     {
         assert_int_equal((int)result_image->image[index], 0);
     }
