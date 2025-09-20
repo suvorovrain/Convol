@@ -33,7 +33,7 @@ enum effect parse_effect(const char *str)
     {
         return EMBOSS;
     }
-    error("ERROR: invalid filter name\n");
+    send_error("ERROR: invalid filter name\n");
     return -1;
 }
 
@@ -58,7 +58,7 @@ enum algorithm_type parse_algorithm_type(const char *str)
     {
         return PARALLEL_COLUMN;
     }
-    error("ERROR: invalid algorithm type\n");
+    send_error("ERROR: invalid algorithm type\n");
     return -1;
 }
 
@@ -78,7 +78,7 @@ enum strength parse_effect_strength(const char *str)
     {
         return BIG;
     }
-    error("ERROR: invalid strength\n");
+    send_error("ERROR: invalid strength\n");
     return -1;
 }
 
@@ -93,7 +93,7 @@ enum type parse_type(const char *type)
     {
         return QUEUE;
     }
-    error("ERROR: invalid type\n");
+    send_error("ERROR: invalid type\n");
     return -1;
 }
 
@@ -111,7 +111,7 @@ char **parse_source_images(char ***argv, int *count)
     char **files = malloc(capacity * sizeof(char *));
     if (!files)
     {
-        error("ERROR: malloc failed\n");
+        send_error("ERROR: malloc failed\n");
         return NULL;
     }
 
@@ -124,7 +124,7 @@ char **parse_source_images(char ***argv, int *count)
             if (!tmp)
             {
                 free(files);
-                error("ERROR: realloc failed\n");
+                send_error("ERROR: realloc failed\n");
                 return NULL;
             }
             files = tmp;
@@ -133,7 +133,7 @@ char **parse_source_images(char ***argv, int *count)
         if (!dup)
         {
             free(files);
-            error("ERROR: strdup failed\n");
+            send_error("ERROR: strdup failed\n");
             return NULL;
         }
         files[n++] = dup;
@@ -149,7 +149,7 @@ input_data *validate_input(int argc, char **argv)
     input_data *input = malloc(sizeof(*input));
     if (!input)
     {
-        error("ERROR: malloc failed\n");
+        send_error("ERROR: malloc failed\n");
         return NULL;
     }
 
@@ -159,7 +159,7 @@ input_data *validate_input(int argc, char **argv)
 
     if (argc - img_count < SETTINGS_NUMBER)
     {
-        error(USAGE_MSG);
+        send_error(USAGE_MSG);
         return NULL;
     }
     input->src_images = images;
@@ -167,13 +167,13 @@ input_data *validate_input(int argc, char **argv)
 
     if (!(*argv))
     {
-        error(USAGE_MSG);
+        send_error(USAGE_MSG);
         return NULL;
     }
     int effect = parse_effect(*argv);
     if (effect == -1)
     {
-        error(USAGE_MSG);
+        send_error(USAGE_MSG);
         return NULL;
     }
     input->effect_type = effect;
@@ -181,7 +181,7 @@ input_data *validate_input(int argc, char **argv)
     int strength = parse_effect_strength(*(++argv));
     if (strength == -1)
     {
-        error(USAGE_MSG);
+        send_error(USAGE_MSG);
         return NULL;
     }
     input->effect_strength = strength;
@@ -189,14 +189,14 @@ input_data *validate_input(int argc, char **argv)
     input->folder_for_store = strdup(*(++argv));
     if (!input->folder_for_store)
     {
-        error("ERROR: strdup failed\n");
+        send_error("ERROR: strdup failed\n");
         return NULL;
     }
 
     int algorithm = parse_algorithm_type(*(++argv));
     if (algorithm == -1)
     {
-        error(USAGE_MSG);
+        send_error(USAGE_MSG);
         return NULL;
     }
     input->algorithm = algorithm;
@@ -212,7 +212,7 @@ input_data *validate_input(int argc, char **argv)
         type = parse_type(*argv);
         if (type == -1)
         {
-            error(USAGE_MSG);
+            send_error(USAGE_MSG);
             return NULL;
         }
     }

@@ -6,7 +6,7 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-#define error(...) (fprintf(stderr, __VA_ARGS__))
+#define send_error(...) (fprintf(stderr, __VA_ARGS__))
 // used to tell the readers/workers/writets that there is no more tasks
 
 #define PILL_TASK_ID -1

@@ -11,7 +11,7 @@ image_data *parallel_pixel_convolution(image_data *image, convolution_filter *fi
     image_data *new_image = create_canvas(image);
     if (!new_image)
     {
-        error("ERROR: new canvas creation failed\n");
+        send_error("ERROR: new canvas creation failed\n");
         return NULL;
     };
     unsigned char *result_image = new_image->image;
@@ -27,8 +27,8 @@ image_data *parallel_pixel_convolution(image_data *image, convolution_filter *fi
     double bias = filter->bias;
     double red = 0.0, green = 0.0, blue = 0.0;
     int x, y, fx, fy, ix, iy, idx;
-#pragma omp parallel for collapse(2)                                                               \
-    schedule(static) private(x, y, fx, fy, ix, iy, idx, red, green, blue)
+#pragma omp parallel for collapse(2) schedule(static)                                              \
+    private(x, y, fx, fy, ix, iy, idx, red, green, blue)
     for (x = 0; x < width; x++)
     {
         for (y = 0; y < height; y++)
@@ -80,7 +80,7 @@ image_data *parallel_row_convolution(image_data *image, convolution_filter *filt
     image_data *new_image = create_canvas(image);
     if (!new_image)
     {
-        error("ERROR: new canvas creation failed\n");
+        send_error("ERROR: new canvas creation failed\n");
         return NULL;
     };
     unsigned char *result_image = new_image->image;
@@ -147,7 +147,7 @@ image_data *parallel_column_convolution(image_data *image, convolution_filter *f
     image_data *new_image = create_canvas(image);
     if (!new_image)
     {
-        error("ERROR: new canvas creation failed\n");
+        send_error("ERROR: new canvas creation failed\n");
         return NULL;
     };
     unsigned char *result_image = new_image->image;

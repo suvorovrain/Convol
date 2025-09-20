@@ -75,7 +75,7 @@ convolution_filter *set_filter(enum effect eff, enum strength strength)
     case EMBOSS:
         return create_emboss_convolution_filter(strength);
     default:
-        error("ERROR: invalid filter name");
+        send_error("ERROR: invalid filter name");
         return NULL;
     }
 }
@@ -137,7 +137,7 @@ convolution_filter *create_blur_convolution_filter(enum strength str)
         return alloc_and_copy_2d(BIG_FILTER_SIZE, big_blur_filter.factor, big_blur_filter.bias,
                                  big_blur_filter.matrix);
     default:
-        error("ERROR: invalid filter size");
+        send_error("ERROR: invalid filter size");
         return NULL;
     }
 }
@@ -200,7 +200,7 @@ convolution_filter *create_motion_blur_convolution_filter(enum strength str)
         return alloc_and_copy_2d(BIG_FILTER_SIZE, big_motion_blur_filter.factor,
                                  big_motion_blur_filter.bias, big_motion_blur_filter.matrix);
     default:
-        error("ERROR: invalid filter size");
+        send_error("ERROR: invalid filter size");
         return NULL;
     }
 }
@@ -263,7 +263,7 @@ convolution_filter *create_find_edges_convolution_filter(enum strength str)
         return alloc_and_copy_2d(BIG_FILTER_SIZE, big_find_edges_filter.factor,
                                  big_find_edges_filter.bias, big_find_edges_filter.matrix);
     default:
-        error("ERROR: invalid filter size");
+        send_error("ERROR: invalid filter size");
         return NULL;
     }
 }
@@ -326,7 +326,7 @@ convolution_filter *create_emboss_convolution_filter(enum strength str)
         return alloc_and_copy_2d(BIG_FILTER_SIZE, big_emboss_filter.factor, big_emboss_filter.bias,
                                  big_emboss_filter.matrix);
     default:
-        error("ERROR: invalid filter size");
+        send_error("ERROR: invalid filter size");
         return NULL;
     }
 }

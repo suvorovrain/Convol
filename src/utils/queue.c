@@ -62,14 +62,14 @@ b_queue *bq_init(size_t capacity)
     b_queue *queue = calloc(1, sizeof *queue);
     if (!queue)
     {
-        error("Error: malloc failed\n");
+        send_error("Error: malloc failed\n");
         return NULL;
     }
 
     node *sentinel = malloc(sizeof *sentinel);
     if (!sentinel)
     {
-        error("Error: malloc failed\n");
+        send_error("Error: malloc failed\n");
         free(queue);
         return NULL;
     }
@@ -81,7 +81,7 @@ b_queue *bq_init(size_t capacity)
     int rc = pthread_mutex_init(&(queue->lock), NULL);
     if (rc)
     {
-        error("Error: mutex init failed\n");
+        send_error("Error: mutex init failed\n");
         free(sentinel);
         free(queue);
         return NULL;
@@ -89,7 +89,7 @@ b_queue *bq_init(size_t capacity)
     rc = pthread_cond_init(&(queue->not_empty_cond), NULL);
     if (rc)
     {
-        error("Error: cond init failed\n");
+        send_error("Error: cond init failed\n");
         pthread_mutex_destroy(&(queue->lock));
         free(sentinel);
         free(queue);
@@ -98,7 +98,7 @@ b_queue *bq_init(size_t capacity)
     rc = pthread_cond_init(&(queue->not_full_cond), NULL);
     if (rc)
     {
-        error("Error: cond init failed\n");
+        send_error("Error: cond init failed\n");
         pthread_cond_destroy(&(queue->not_empty_cond));
         pthread_mutex_destroy(&(queue->lock));
         free(sentinel);
@@ -136,7 +136,7 @@ in_task *create_in_task(int id, image_data *image, char *filename)
     in_task *task = malloc(sizeof(*task));
     if (!task)
     {
-        error("ERROR: malloc failed\n");
+        send_error("ERROR: malloc failed\n");
         return NULL;
     }
     task->id = id;
@@ -150,7 +150,7 @@ out_task *create_out_task(int id, image_data *image, char *filename)
     out_task *task = malloc(sizeof *task);
     if (!task)
     {
-        error("ERROR: malloc failed\n");
+        send_error("ERROR: malloc failed\n");
         return NULL;
     }
 

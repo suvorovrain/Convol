@@ -12,7 +12,7 @@
 #define IN_QUEUE_SIZE 4 * WORKERS_NUMBER
 #define OUT_QUEUE_SIZE 2 * WORKERS_NUMBER
 
-#define error(...) (fprintf(stderr, __VA_ARGS__))
+#define send_error(...) (fprintf(stderr, __VA_ARGS__))
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))

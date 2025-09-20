@@ -24,7 +24,7 @@ convolution_func get_convolution(int type)
     case PARALLEL_COLUMN:
         return parallel_column_convolution;
     default:
-        error("ERROR: unsupported algorithm type\n");
+        send_error("ERROR: unsupported algorithm type\n");
         return NULL;
     }
 }
@@ -34,7 +34,7 @@ image_data *create_canvas(image_data *image)
     image_data *out = malloc(sizeof(*out));
     if (!out)
     {
-        error("ERROR: malloc failed\n");
+        send_error("ERROR: malloc failed\n");
         return NULL;
     }
 
@@ -46,7 +46,7 @@ image_data *create_canvas(image_data *image)
     out->image = malloc(size);
     if (!out->image)
     {
-        error("ERROR: malloc failed\n");
+        send_error("ERROR: malloc failed\n");
         free(out);
         return NULL;
     };

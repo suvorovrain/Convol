@@ -10,7 +10,7 @@ image_data *linear_convolution(image_data *image, convolution_filter *filter)
     image_data *new_image = create_canvas(image);
     if (!new_image)
     {
-        error("ERROR: new canvas creation failed\n");
+        send_error("ERROR: new canvas creation failed\n");
         return NULL;
     };
     unsigned char *result_image = new_image->image;

@@ -4,7 +4,7 @@
 #ifndef FILTERS_H
 #define FILTERS_H
 
-#define error(...) (fprintf(stderr, __VA_ARGS__))
+#define send_error(...) (fprintf(stderr, __VA_ARGS__))
 
 #define SMALL_FILTER_SIZE 5
 typedef struct
