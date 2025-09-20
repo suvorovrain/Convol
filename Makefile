@@ -36,6 +36,3 @@ fmt-check:
 
 lint:
 	clang-tidy $(SRC) $(APP_SRC) $(TEST_SRC) -- $(CFLAGS)
-
-
-	
