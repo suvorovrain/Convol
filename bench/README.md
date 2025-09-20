@@ -15,7 +15,7 @@
 
     - **Small image size**: 720x1080
 
-- The [nmjk.bmp](../image-examples/big/nmjk.bmp) file was selected as the big image.
+- The [nmjk.bmp](../image-examples/big/nmjk_x5_8bit.bmp) file was selected as the big image.
 
     -   **Big image size**: 3680x3680
 
