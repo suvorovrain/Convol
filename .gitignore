@@ -1,0 +1,5 @@
+build
+image-results
+.vscode
+bench/venv
+bench/results

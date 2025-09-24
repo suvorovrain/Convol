@@ -1,0 +1,32 @@
+Checks: >
+  clang-analyzer-*,
+  bugprone-*,
+  modernize-*,
+  performance-*,
+  readability-*,
+  -readability-magic-numbers,
+  -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,
+  -clang-analyzer-optin.core.EnumCastOutOfRange,
+  -readability-identifier-length,
+  -readability-isolate-declaration,
+  -bugprone-multi-level-implicit-pointer-conversion,
+  -clang-analyzer-unix.Malloc,
+
+
+WarningsAsErrors: '*'
+
+CheckOptions:
+  - key:             modernize-use-nullptr.NullMacros
+    value:           'NULL'
+  - key:             modernize-loop-convert.MaxCopySize
+    value:           '16'
+  - key:             readability-identifier-naming.VariableCase
+    value:           lower_case
+  - key:             readability-identifier-length.IgnoredLoopCounterNames
+    value:           '^(i|j|k|x|y)$'
+  - key:             readability-function-cognitive-complexity.Threshold
+    value:           74
+  - key:             bugprone-easily-swappable-parameters.MinimumLength
+    value:           4
+  - key:             performance-for-range-copy.WarnOnAllAutoCopies
+    value:           'true'
